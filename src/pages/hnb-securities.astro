@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getRates } from '../lib/strapi';
+
+const base  = import.meta.env.BASE_URL;
+const rates = await getRates();
+
+const repoRates  = rates.filter(r => r.instrument === 'Repo');
+const tbillRates = rates.filter(r => r.instrument === 'T-Bill');
+const tbondRates = rates.filter(r => r.instrument === 'T-Bond');
+---
+
+<BaseLayout
+  title="HNB Securities - CBSL Primary Dealer"
+  description="Direct access to T-Bills, T-Bonds, and Repo instruments. HNB Securities is a CBSL-appointed Primary Dealer since 1992."
+>
+  <div id="site-header" class="site-header page-hero-sec">
+    <div class="hero-overlay"></div>
+    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
+      <p class="overline">HNB Securities</p>
+      <h1>CBSL Primary Dealer Since 1992</h1>
+      <p class="hero-sub">
+        Direct access to Treasury Bills, Treasury Bonds, and Repo instruments.
+        Wholesale liquidity and primary auction participation.
+      </p>
+      <div style="display:flex;gap:var(--sp-m);flex-wrap:wrap;margin-top:var(--sp-l)">
+        <a href="mailto:securities@hnbib.lk" class="btn btn-primary">Get a Quote</a>
+        <a href={`${base}about-us/`} class="btn btn-outline btn-outline-light">About Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- What we offer -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">Our Instruments</p>
+      <h2 class="section-title">Fixed Income Solutions</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-l);margin-top:var(--sp-xl)">
+        {[
+          { icon: '🏦', title: 'Repo Transactions', desc: 'Overnight and term repo facilities at competitive rates backed by government securities. Ideal for short-term liquidity management.' },
+          { icon: '📄', title: 'Treasury Bills', desc: '91, 182, and 364-day T-Bills. Direct access to primary auctions and secondary market trading through our CBSL Primary Dealer status.' },
+          { icon: '📊', title: 'Treasury Bonds', desc: 'Medium and long-term government securities offering fixed coupon income. Competitive secondary market pricing from our dealer desk.' },
+        ].map(item => (
+          <div class="offer-card">
+            <div class="offer-icon">{item.icon}</div>
+            <h3 class="offer-title">{item.title}</h3>
+            <p class="offer-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Rates -->
+  {rates.length > 0 && (
+    <section class="section-pad" style="background:oklch(0.97 0.008 242)">
+      <div class="section-inner">
+        <p class="section-eyebrow">Market Data</p>
+        <h2 class="section-title">Current Interest Rates</h2>
+        <p class="rates-note">Indicative rates — contact us for live quotes.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-l);margin-top:var(--sp-xl)">
+          {[
+            { title: 'Repo Rate', rows: repoRates },
+            { title: 'Treasury Bills', rows: tbillRates },
+            { title: 'Treasury Bonds', rows: tbondRates },
+          ].filter(g => g.rows.length > 0).map(group => (
+            <div class="rates-group">
+              <h3 class="rates-group-title">{group.title}</h3>
+              <table class="rates-table">
+                <thead><tr><th>Tenor</th><th>Rate (%)</th></tr></thead>
+                <tbody>
+                  {group.rows.map(r => (
+                    <tr>
+                      <td>{r.tenor}</td>
+                      <td class="rate-val">{r.rate.toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Why HNB Securities -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">Our Advantage</p>
+      <h2 class="section-title">Why Choose HNB Securities?</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-l);margin-top:var(--sp-xl)">
+        {[
+          { title: 'Primary Dealer Status', desc: 'One of a select group of CBSL-appointed Primary Dealers, giving us direct access to every government securities auction.' },
+          { title: 'HNB Group Backing', desc: 'The strength and network of HNB Group behind every transaction — Sri Lanka\'s most trusted financial institution.' },
+          { title: 'Competitive Pricing', desc: 'Our dedicated dealer desk ensures best-execution pricing across the yield curve for both primary and secondary markets.' },
+          { title: 'Institutional Grade Service', desc: 'Serving corporate treasuries, insurance companies, provident funds, and high-net-worth investors since 1992.' },
+        ].map(item => (
+          <div class="why-card">
+            <h3 class="why-title">{item.title}</h3>
+            <p class="why-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <h2 class="section-title">Ready to Invest in Government Securities?</h2>
+      <p class="cta-final-sub">Get live rates and expert guidance from our fixed income specialists.</p>
+      <div class="cta-actions">
+        <a href="mailto:securities@hnbib.lk" class="btn btn-primary btn-lg">Contact Our Desk</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.page-hero-sec {
+  position: relative;
+  background: linear-gradient(135deg, oklch(0.22 0.10 242), oklch(0.38 0.12 240));
+  padding: var(--sp-3xl) 0 var(--sp-2xl);
+  color: #fff;
+  overflow: hidden;
+}
+.page-hero-sec .hero-overlay {
+  position: absolute; inset: 0;
+  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/stylish_soft_blue_curve_lines_abstract_background_1017_19950_2a0e1a2dfc.jpg') center/cover no-repeat;
+  opacity: .15;
+}
+.page-hero-inner { max-width: 640px; }
+.page-hero-sec .overline { color: oklch(1 0 0 / .60); }
+.page-hero-sec h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
+.page-hero-sec .hero-sub { color: oklch(1 0 0 / .75); }
+
+.offer-card { background: var(--bg); border-radius: 12px; padding: var(--sp-l); border: 1px solid oklch(0 0 0 / .07); }
+.offer-icon { font-size: 2rem; margin-bottom: var(--sp-m); }
+.offer-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
+.offer-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+
+.rates-note { color: var(--text-muted); font-size: 0.85rem; }
+.rates-group-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-m); padding-bottom: var(--sp-s); border-bottom: 2px solid var(--accent); }
+.rates-table { width: 100%; border-collapse: collapse; }
+.rates-table th { text-align: left; font-size: 0.78rem; color: var(--text-muted); padding: var(--sp-xs) 0; font-weight: 500; }
+.rates-table td { padding: var(--sp-s) 0; border-bottom: 1px solid oklch(0 0 0 / .06); font-size: 0.92rem; }
+.rate-val { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
+
+.why-card { background: #fff; border: 1px solid oklch(0 0 0 / .08); border-radius: 12px; padding: var(--sp-l); border-left: 4px solid var(--accent); }
+.why-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
+.why-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+
+.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; justify-content: center; }
+
+@media (max-width: 900px) {
+  :global([style*="grid-template-columns:repeat(3"]) { grid-template-columns: 1fr !important; }
+  :global([style*="grid-template-columns:repeat(2"]) { grid-template-columns: 1fr !important; }
+}
+</style>

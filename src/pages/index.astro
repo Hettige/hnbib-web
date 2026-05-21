@@ -1,0 +1,415 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getServices, getRates, getArticles, getPartners, getSiteSettings, formatDate, imgUrl } from '../lib/strapi';
+
+const base = import.meta.env.BASE_URL;
+
+const [services, rates, articles, partners, settings] = await Promise.all([
+  getServices(),
+  getRates(),
+  getArticles({ limit: 3 }),
+  getPartners(),
+  getSiteSettings(),
+]);
+
+// Group rates
+const repoRates  = rates.filter(r => r.instrument === 'Repo');
+const tbillRates = rates.filter(r => r.instrument === 'T-Bill');
+const tbondRates = rates.filter(r => r.instrument === 'T-Bond');
+
+// Latest effective date for rates
+const latestDate = rates.length
+  ? formatDate(rates.slice().sort((a,b) => b.effectiveDate.localeCompare(a.effectiveDate))[0].effectiveDate)
+  : '';
+---
+
+<BaseLayout
+  title={`${settings?.siteName ?? 'HNB Investment Bank'} - Sri Lanka's Premier Investment Bank`}
+  description={settings?.tagline}
+>
+
+  <!-- ── HERO ─────────────────────────────────────────────── -->
+  <div id="site-header" class="site-header">
+    <section class="section-hero hero-home">
+      <div class="hero-bg" style="background-image:url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/Home_page_slider_1_1_e9a9bdf6ce.webp')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content section-inner">
+        <p class="overline hero-overline">Established {settings?.established ?? 1992}</p>
+        <h1 class="hero-headline">
+          Sri Lanka's Premier<br />Investment Bank
+        </h1>
+        <p class="hero-sub">
+          Stockbroking &bull; Fixed Income &bull; Corporate Finance &bull; Private Equity
+        </p>
+        <div class="hero-actions">
+          <a href={`${base}about-us/`} class="btn btn-primary">Discover HNBIB</a>
+          <a href={`${base}corporate-finance/`} class="btn btn-outline btn-outline-light">Our Track Record</a>
+        </div>
+      </div>
+
+      <!-- Floating stats card -->
+      <div class="hero-float-card">
+        <div class="hfc-item">
+          <span class="hfc-num">33+</span>
+          <span class="hfc-label">Years of Excellence</span>
+        </div>
+        <div class="hfc-divider"></div>
+        <div class="hfc-item">
+          <span class="hfc-num">LKR 200Bn+</span>
+          <span class="hfc-label">Capital Raised</span>
+        </div>
+        <div class="hfc-divider"></div>
+        <div class="hfc-item">
+          <span class="hfc-num">CSE &amp; CBSL</span>
+          <span class="hfc-label">Regulated Member</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── SERVICES GRID ─────────────────────────────────────── -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">What We Do</p>
+      <h2 class="section-title">Four Business Lines, One Bank</h2>
+      <div class="services-home-grid">
+        {services.map(svc => (
+          <a href={`${base}${svc.pageUrl.replace('.html', '/')}`} class="svc-card">
+            <div class="svc-card-img">
+              {svc.coverImage
+                ? <img src={imgUrl(svc.coverImage, 'medium')} alt={svc.coverImage.alternativeText ?? svc.name} loading="lazy" />
+                : <div class="svc-card-img-placeholder"></div>
+              }
+            </div>
+            <div class="svc-card-body">
+              <h3 class="svc-card-name">{svc.name}</h3>
+              <p class="svc-card-tagline">{svc.tagline}</p>
+              <span class="svc-card-link">Learn more &rarr;</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RATES ─────────────────────────────────────────────── -->
+  {rates.length > 0 && (
+    <section class="section-pad section-tint">
+      <div class="section-inner">
+        <p class="section-eyebrow">Live Market Data</p>
+        <h2 class="section-title">Interest Rates</h2>
+        {latestDate && <p class="rates-date">As of {latestDate}</p>}
+
+        <div class="rates-grid">
+          <!-- Repo -->
+          {repoRates.length > 0 && (
+            <div class="rates-group">
+              <h3 class="rates-group-title">Repo Rate</h3>
+              <table class="rates-table">
+                <thead>
+                  <tr><th>Tenor</th><th>Rate (%)</th></tr>
+                </thead>
+                <tbody>
+                  {repoRates.map(r => (
+                    <tr>
+                      <td>{r.tenor}</td>
+                      <td class="rate-val">{r.rate.toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <!-- T-Bills -->
+          {tbillRates.length > 0 && (
+            <div class="rates-group">
+              <h3 class="rates-group-title">Treasury Bills</h3>
+              <table class="rates-table">
+                <thead>
+                  <tr><th>Tenor</th><th>Rate (%)</th></tr>
+                </thead>
+                <tbody>
+                  {tbillRates.map(r => (
+                    <tr>
+                      <td>{r.tenor}</td>
+                      <td class="rate-val">{r.rate.toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <!-- T-Bonds -->
+          {tbondRates.length > 0 && (
+            <div class="rates-group">
+              <h3 class="rates-group-title">Treasury Bonds</h3>
+              <table class="rates-table">
+                <thead>
+                  <tr><th>Tenor</th><th>Rate (%)</th></tr>
+                </thead>
+                <tbody>
+                  {tbondRates.map(r => (
+                    <tr>
+                      <td>{r.tenor}</td>
+                      <td class="rate-val">{r.rate.toFixed(2)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <p class="rates-disclaimer">
+          Rates are indicative only and subject to change. Contact us for live quotes.
+        </p>
+      </div>
+    </section>
+  )}
+
+  <!-- ── PARTNERS STRIP ─────────────────────────────────────── -->
+  {partners.length > 0 && (
+    <div class="partners-strip">
+      <div class="section-inner">
+        <p class="partners-label">Trusted by Sri Lanka's leading corporates</p>
+        <div class="partners-logos">
+          {partners.map(p => (
+            p.logo
+              ? <img src={imgUrl(p.logo, 'thumbnail')} alt={p.name} title={p.name} class="partner-logo" loading="lazy" />
+              : <span class="partner-name-text">{p.name}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- ── LATEST NEWS ────────────────────────────────────────── -->
+  {articles.length > 0 && (
+    <section class="section-pad">
+      <div class="section-inner">
+        <p class="section-eyebrow">Insights</p>
+        <h2 class="section-title">Latest from HNBIB</h2>
+        <div class="news-cards-grid">
+          {articles.map(a => (
+            <a href={`${base}news/${a.slug}/`} class="news-card">
+              <div class="nc-img">
+                {a.featuredImage
+                  ? <img src={imgUrl(a.featuredImage, 'small')} alt={a.featuredImage.alternativeText ?? a.title} loading="lazy" />
+                  : <div class="nc-img-placeholder"></div>
+                }
+                <span class="nc-cat">{a.category}</span>
+              </div>
+              <div class="nc-body">
+                <p class="nc-date">{formatDate(a.publishDate)}</p>
+                <h3 class="nc-title">{a.title}</h3>
+                <p class="nc-excerpt">{a.excerpt}</p>
+                <span class="nc-read">{a.readTime ?? '3 min read'} &rarr;</span>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div class="section-cta-row">
+          <a href={`${base}news/`} class="btn btn-outline">View All Insights</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── CTA ───────────────────────────────────────────────── -->
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <p class="section-eyebrow">Get in Touch</p>
+      <h2 class="section-title">Ready to Put Your Capital to Work?</h2>
+      <p class="cta-final-sub">
+        Speak with one of our specialists about stockbroking, fixed income, corporate finance, or private equity.
+      </p>
+      <div class="cta-actions">
+        <a href={`mailto:${settings?.email ?? 'info@hnbib.lk'}`} class="btn btn-primary btn-lg">Contact Us</a>
+        <a href={`tel:${settings?.phone ?? '+94112490900'}`} class="btn btn-outline btn-outline-light btn-lg">
+          {settings?.phone ?? '+94 11 2 490 900'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+/* ── Hero ── */
+.hero-home {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    oklch(0.20 0.10 242 / 0.88) 0%,
+    oklch(0.30 0.12 242 / 0.60) 60%,
+    transparent 100%
+  );
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  padding-block: var(--sp-3xl);
+}
+.hero-overline { color: oklch(1 0 0 / .65); margin-bottom: var(--sp-s); }
+.hero-headline {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin: 0 0 var(--sp-m);
+}
+.hero-sub {
+  color: oklch(1 0 0 / .80);
+  font-size: 1.05rem;
+  margin-bottom: var(--sp-l);
+}
+.hero-actions { display: flex; gap: var(--sp-m); flex-wrap: wrap; }
+
+/* Float card */
+.hero-float-card {
+  position: absolute;
+  right: max(var(--sp-l), 5vw);
+  bottom: var(--sp-xl);
+  background: oklch(1 0 0 / .12);
+  backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 0 0 / .20);
+  border-radius: 16px;
+  display: flex;
+  gap: 0;
+  padding: var(--sp-m) var(--sp-l);
+  z-index: 3;
+}
+.hfc-item { text-align: center; padding: 0 var(--sp-m); }
+.hfc-num { display: block; font-size: 1.35rem; font-weight: 700; color: #fff; }
+.hfc-label { display: block; font-size: 0.72rem; color: oklch(1 0 0 / .65); margin-top: 2px; white-space: nowrap; }
+.hfc-divider { width: 1px; background: oklch(1 0 0 / .20); margin: 0; }
+
+@media (max-width: 768px) {
+  .hero-float-card {
+    position: static;
+    margin: var(--sp-l) auto 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* ── Services grid ── */
+.services-home-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-m);
+  margin-top: var(--sp-xl);
+}
+.svc-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .12);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .2s, transform .2s;
+  background: oklch(1 0 0);
+  display: flex;
+  flex-direction: column;
+}
+.svc-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px oklch(0 0 0 / .12); }
+.svc-card-img { aspect-ratio: 16/9; overflow: hidden; }
+.svc-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+.svc-card:hover .svc-card-img img { transform: scale(1.04); }
+.svc-card-img-placeholder { width: 100%; height: 100%; background: var(--bg); }
+.svc-card-body { padding: var(--sp-m); flex: 1; display: flex; flex-direction: column; }
+.svc-card-name { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-xs); }
+.svc-card-tagline { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 auto; padding-bottom: var(--sp-m); }
+.svc-card-link { font-size: 0.82rem; font-weight: 600; color: var(--accent); }
+
+@media (max-width: 1024px) { .services-home-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .services-home-grid { grid-template-columns: 1fr; } }
+
+/* ── Rates ── */
+.section-tint { background: oklch(0.97 0.008 242); }
+.rates-date { color: var(--text-muted); font-size: 0.88rem; margin: calc(-1 * var(--sp-m)) 0 var(--sp-l); }
+.rates-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-l);
+  margin-top: var(--sp-xl);
+}
+.rates-group-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0 0 var(--sp-m);
+  padding-bottom: var(--sp-s);
+  border-bottom: 2px solid var(--accent);
+}
+.rates-table { width: 100%; border-collapse: collapse; }
+.rates-table th { text-align: left; font-size: 0.78rem; color: var(--text-muted); padding: var(--sp-xs) 0; font-weight: 500; }
+.rates-table td { padding: var(--sp-s) 0; border-bottom: 1px solid oklch(0 0 0 / .06); font-size: 0.92rem; }
+.rate-val { font-weight: 700; color: var(--accent); font-size: 1.05rem; }
+.rates-disclaimer { font-size: 0.78rem; color: var(--text-muted); margin-top: var(--sp-l); }
+@media (max-width: 900px) { .rates-grid { grid-template-columns: 1fr; } }
+
+/* ── Partners ── */
+.partners-strip { background: oklch(0.20 0.08 242); padding: var(--sp-l) 0; }
+.partners-label { color: oklch(1 0 0 / .55); font-size: 0.8rem; text-align: center; margin-bottom: var(--sp-m); letter-spacing: .06em; text-transform: uppercase; }
+.partners-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-l);
+}
+.partner-logo { height: 40px; width: auto; filter: brightness(0) invert(1); opacity: .65; transition: opacity .2s; object-fit: contain; }
+.partner-logo:hover { opacity: 1; }
+.partner-name-text { color: oklch(1 0 0 / .65); font-size: 0.85rem; }
+
+/* ── News cards ── */
+.news-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-l);
+  margin-top: var(--sp-xl);
+}
+.news-card { text-decoration: none; color: inherit; border-radius: 12px; overflow: hidden; border: 1px solid oklch(0 0 0 / .08); background: #fff; transition: box-shadow .2s, transform .2s; display: flex; flex-direction: column; }
+.news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px oklch(0 0 0 / .10); }
+.nc-img { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+.nc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+.news-card:hover .nc-img img { transform: scale(1.04); }
+.nc-img-placeholder { width: 100%; height: 100%; background: var(--bg); }
+.nc-cat { position: absolute; top: var(--sp-s); left: var(--sp-s); background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+.nc-body { padding: var(--sp-m); flex: 1; display: flex; flex-direction: column; }
+.nc-date { font-size: 0.78rem; color: var(--text-muted); margin: 0 0 var(--sp-xs); }
+.nc-title { font-size: 0.96rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); line-height: 1.4; }
+.nc-excerpt { font-size: 0.86rem; color: var(--text-muted); margin: 0 0 auto; padding-bottom: var(--sp-m); line-height: 1.6; }
+.nc-read { font-size: 0.82rem; font-weight: 600; color: var(--accent); }
+.section-cta-row { text-align: center; margin-top: var(--sp-xl); }
+@media (max-width: 1024px) { .news-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .news-cards-grid { grid-template-columns: 1fr; } }
+
+/* ── CTA ── */
+.cta-final {
+  background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270));
+  text-align: center;
+  color: #fff;
+}
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-eyebrow { color: oklch(1 0 0 / .60); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
+</style>

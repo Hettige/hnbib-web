@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getDeals } from '../lib/strapi';
+
+const base    = import.meta.env.BASE_URL;
+const deals   = await getDeals();
+const featured = deals.filter(d => d.isFeatured);
+const others   = deals.filter(d => !d.isFeatured);
+
+const dealTypes = [...new Set(deals.map(d => d.dealType))];
+---
+
+<BaseLayout
+  title="Corporate Finance - HNB Investment Bank"
+  description="LKR 200 billion raised. HNB Investment Bank's landmark transactions across equity capital markets, debt capital markets, M&A, and structured finance."
+>
+  <div id="site-header" class="site-header page-hero-cf">
+    <div class="hero-overlay"></div>
+    <div class="page-hero-inner section-inner" style="position:relative;z-index:2">
+      <p class="overline">Capital Markets &amp; Advisory</p>
+      <h1>Corporate Finance</h1>
+      <p class="hero-sub">
+        From Sri Lanka's landmark IPOs to record-breaking debentures.
+        Equity capital markets, debt capital markets, M&amp;A advisory, and structured finance.
+      </p>
+      <div class="cf-stats">
+        <div class="cf-stat">
+          <span class="cf-stat-num">LKR 200Bn+</span>
+          <span class="cf-stat-label">Capital Raised</span>
+        </div>
+        <div class="cf-stat">
+          <span class="cf-stat-num">30+</span>
+          <span class="cf-stat-label">Years of Deals</span>
+        </div>
+        <div class="cf-stat">
+          <span class="cf-stat-num">{deals.length}+</span>
+          <span class="cf-stat-label">Landmark Transactions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured deals -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">Landmark Transactions</p>
+      <h2 class="section-title">Featured Deals</h2>
+      <div class="deals-featured-grid">
+        {featured.map(d => (
+          <div class="deal-card deal-card--featured">
+            <div class="deal-type-badge">{d.dealType}</div>
+            <div class="deal-amount">{d.amountLabel}</div>
+            <h3 class="deal-client">{d.client}</h3>
+            <p class="deal-role">{d.role}</p>
+            {d.description && <p class="deal-desc">{d.description}</p>}
+            <p class="deal-year">{d.year}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Full track record table -->
+  {others.length > 0 && (
+    <section class="section-pad" style="background:var(--bg)">
+      <div class="section-inner">
+        <p class="section-eyebrow">Track Record</p>
+        <h2 class="section-title">All Transactions</h2>
+        <div class="deals-table-wrap">
+          <table class="deals-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Role</th>
+                <th>Year</th>
+              </tr>
+            </thead>
+            <tbody>
+              {others.map(d => (
+                <tr>
+                  <td class="deal-td-client">{d.client}</td>
+                  <td><span class="deal-type-pill">{d.dealType}</span></td>
+                  <td class="deal-td-amount">{d.amountLabel}</td>
+                  <td class="deal-td-role">{d.role}</td>
+                  <td class="deal-td-year">{d.year}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <p class="section-eyebrow">Work With Us</p>
+      <h2 class="section-title">Planning a Capital Markets Transaction?</h2>
+      <p class="cta-final-sub">
+        Our Corporate Finance team has deep expertise across equity, debt, M&amp;A, and structured finance.
+      </p>
+      <div class="cta-actions">
+        <a href="mailto:info@hnbib.lk" class="btn btn-primary btn-lg">Talk to Our Team</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.page-hero-cf {
+  position: relative;
+  background: linear-gradient(135deg, oklch(0.20 0.12 242), oklch(0.36 0.18 260));
+  padding: var(--sp-3xl) 0 var(--sp-2xl);
+  color: #fff;
+  overflow: hidden;
+}
+.page-hero-cf .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/african_business_male_people_shaking_hands_scaled_cc3df98a5a.webp') center/cover no-repeat;
+  opacity: .18;
+}
+.page-hero-inner { max-width: 700px; }
+.page-hero-cf .overline { color: oklch(1 0 0 / .60); }
+.page-hero-cf h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
+.page-hero-cf .hero-sub { color: oklch(1 0 0 / .75); margin-bottom: var(--sp-xl); }
+.cf-stats { display: flex; gap: var(--sp-xl); flex-wrap: wrap; }
+.cf-stat-num { display: block; font-size: 1.6rem; font-weight: 700; color: #fff; }
+.cf-stat-label { font-size: 0.78rem; color: oklch(1 0 0 / .65); margin-top: 2px; display: block; }
+
+/* Featured deals */
+.deals-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-l);
+  margin-top: var(--sp-xl);
+}
+.deal-card--featured {
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / .08);
+  border-radius: 16px;
+  padding: var(--sp-l);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+}
+.deal-card--featured::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+.deal-card--featured:hover { transform: translateY(-4px); box-shadow: 0 16px 48px oklch(0 0 0 / .12); }
+.deal-type-badge {
+  display: inline-block;
+  background: oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .10);
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: var(--sp-m);
+}
+.deal-amount { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: var(--sp-xs); }
+.deal-client { font-size: 1.1rem; font-weight: 600; margin: 0 0 var(--sp-xs); }
+.deal-role { font-size: 0.85rem; color: var(--accent); font-weight: 500; margin: 0 0 var(--sp-m); }
+.deal-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 var(--sp-m); }
+.deal-year { font-size: 0.78rem; color: var(--text-muted); }
+
+/* Table */
+.deals-table-wrap { overflow-x: auto; margin-top: var(--sp-xl); }
+.deals-table { width: 100%; border-collapse: collapse; }
+.deals-table th {
+  text-align: left;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: var(--sp-s) var(--sp-m);
+  border-bottom: 2px solid oklch(0 0 0 / .10);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.deals-table td { padding: var(--sp-m); border-bottom: 1px solid oklch(0 0 0 / .06); font-size: 0.9rem; }
+.deals-table tr:hover td { background: oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .04); }
+.deal-type-pill {
+  display: inline-block;
+  background: var(--bg);
+  border: 1px solid oklch(0 0 0 / .12);
+  border-radius: 99px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.deal-td-amount { font-weight: 600; color: var(--primary); }
+.deal-td-year { color: var(--text-muted); font-size: 0.82rem; }
+
+/* CTA */
+.cta-final {
+  background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270));
+  text-align: center;
+  color: #fff;
+}
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-eyebrow { color: oklch(1 0 0 / .60); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 768px) {
+  .deals-featured-grid { grid-template-columns: 1fr; }
+  .cf-stats { gap: var(--sp-l); }
+}
+</style>

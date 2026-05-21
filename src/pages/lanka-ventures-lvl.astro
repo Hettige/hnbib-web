@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Lanka Ventures - Private Equity & Venture Capital"
+  description="Sri Lanka's longest-standing private equity manager. Lanka Ventures provides growth capital to mid-market companies and manages institutional PE/VC mandates."
+>
+  <div id="site-header" class="site-header page-hero-lv">
+    <div class="hero-overlay"></div>
+    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
+      <p class="overline">Lanka Ventures Limited</p>
+      <h1>Private Equity &amp; Venture Capital</h1>
+      <p class="hero-sub">
+        Sri Lanka's longest-standing private equity manager.
+        Growth capital for mid-market companies and institutional PE/VC mandates.
+      </p>
+      <div style="display:flex;gap:var(--sp-m);flex-wrap:wrap;margin-top:var(--sp-l)">
+        <a href="mailto:ventures@hnbib.lk" class="btn btn-primary">Explore Opportunities</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- What we do -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">Investment Strategy</p>
+      <h2 class="section-title">What Lanka Ventures Does</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-l);margin-top:var(--sp-xl)">
+        {[
+          { icon: '🌱', title: 'Growth Capital', desc: 'Providing equity and quasi-equity capital to established mid-market businesses seeking to scale, diversify, or transition ownership.' },
+          { icon: '🏗️', title: 'PE Fund Management', desc: 'Managing institutional private equity mandates with rigorous governance, regular reporting, and alignment with LP objectives.' },
+          { icon: '💡', title: 'Venture Capital', desc: 'Early-stage investments in high-potential Sri Lankan enterprises across technology, healthcare, consumer, and financial services.' },
+        ].map(item => (
+          <div class="lv-card">
+            <div class="lv-icon">{item.icon}</div>
+            <h3 class="lv-title">{item.title}</h3>
+            <p class="lv-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Track record -->
+  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
+    <div class="section-inner">
+      <p class="section-eyebrow">Our Heritage</p>
+      <h2 class="section-title">Decades of Private Equity in Sri Lanka</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-2xl);align-items:center;margin-top:var(--sp-xl)">
+        <div>
+          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:var(--sp-m)">
+            Lanka Ventures Limited is one of Sri Lanka's pioneering private equity fund managers,
+            with a track record spanning more than three decades. As a subsidiary of HNB Investment Bank,
+            Lanka Ventures benefits from deep capital markets expertise and an extensive corporate network.
+          </p>
+          <p style="color:var(--text-muted);line-height:1.8">
+            Our investment philosophy centres on partnering with management teams to drive sustainable value creation
+            through operational improvements, strategic repositioning, and selective add-on acquisitions.
+          </p>
+        </div>
+        <div class="lv-stats-grid">
+          {[
+            { num: '30+', label: 'Years in Private Equity' },
+            { num: 'Mid-Market', label: 'Primary Focus' },
+            { num: 'Multiple', label: 'Sectors Covered' },
+            { num: 'HNB Group', label: 'Group Backing' },
+          ].map(stat => (
+            <div class="lv-stat">
+              <span class="lv-stat-num">{stat.num}</span>
+              <span class="lv-stat-label">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <h2 class="section-title">Seeking Growth Capital or a Strategic Partner?</h2>
+      <p class="cta-final-sub">Lanka Ventures partners with ambitious management teams and institutional investors across Sri Lanka.</p>
+      <div class="cta-actions">
+        <a href="mailto:ventures@hnbib.lk" class="btn btn-primary btn-lg">Get in Touch</a>
+        <a href={`${base}about-us/`} class="btn btn-outline btn-outline-light btn-lg">About HNBIB</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.page-hero-lv {
+  position: relative;
+  background: linear-gradient(135deg, oklch(0.24 0.10 240), oklch(0.38 0.14 262));
+  padding: var(--sp-3xl) 0 var(--sp-2xl);
+  color: #fff;
+  overflow: hidden;
+}
+.page-hero-lv .hero-overlay {
+  position: absolute; inset: 0;
+  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/business_person_futuristic_business_environment_23_2150970181_87f71ded8a.jpg') center/cover no-repeat;
+  opacity: .15;
+}
+.page-hero-inner { max-width: 640px; }
+.page-hero-lv .overline { color: oklch(1 0 0 / .60); }
+.page-hero-lv h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
+.page-hero-lv .hero-sub { color: oklch(1 0 0 / .75); }
+
+.lv-card { background: #fff; border-radius: 12px; padding: var(--sp-l); border: 1px solid oklch(0 0 0 / .08); }
+.lv-icon { font-size: 1.8rem; margin-bottom: var(--sp-m); }
+.lv-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
+.lv-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+
+.lv-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-m); }
+.lv-stat { background: #fff; border-radius: 12px; padding: var(--sp-l); text-align: center; border: 1px solid oklch(0 0 0 / .08); }
+.lv-stat-num { display: block; font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+.lv-stat-label { display: block; font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  [style*="grid-template-columns:repeat(3"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns:repeat(2"] { grid-template-columns: 1fr !important; }
+  .lv-stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>

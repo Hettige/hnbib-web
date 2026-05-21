@@ -1,0 +1,59 @@
+---
+import type { SiteSettings } from '../lib/strapi';
+
+interface Props {
+  base: string;
+  settings?: SiteSettings | null;
+}
+const { base } = Astro.props;
+---
+
+<nav id="site-nav" class="site-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+
+    <!-- Logo -->
+    <a href={base} class="nav-logo" aria-label="HNB Investment Bank home">
+      <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" />
+    </a>
+
+    <!-- Links -->
+    <ul class="nav-links" role="list">
+      <!-- Mobile logo (inside menu) -->
+      <li class="mob-logo-li" aria-hidden="true">
+        <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="" />
+      </li>
+
+      <li><a href={`${base}about-us/`}>About</a></li>
+
+      <!-- Services dropdown -->
+      <li class="has-sub">
+        <button class="sub-trigger" aria-haspopup="true" aria-expanded="false">
+          Services
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="sub-menu" role="menu">
+          <li role="menuitem"><a href={`${base}hnb-stockbrokers/`}>HNB Stockbrokers</a></li>
+          <li role="menuitem"><a href={`${base}hnb-securities/`}>HNB Securities</a></li>
+          <li role="menuitem"><a href={`${base}corporate-finance/`}>Corporate Finance</a></li>
+          <li role="menuitem"><a href={`${base}lanka-ventures-lvl/`}>Lanka Ventures</a></li>
+        </ul>
+      </li>
+
+      <li><a href={`${base}news/`}>Insights</a></li>
+      <li><a href={`${base}team/`}>Our Team</a></li>
+      <li>
+        <a href="mailto:info@hnbib.lk" class="btn btn-primary">Contact Us</a>
+      </li>
+    </ul>
+
+    <!-- Hamburger -->
+    <button class="mob-menu-btn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+</nav>

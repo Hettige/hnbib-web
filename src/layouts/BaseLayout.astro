@@ -1,0 +1,92 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteSettings } from '../lib/strapi';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+const settings = await getSiteSettings();
+const base = import.meta.env.BASE_URL;
+
+const pageTitle   = title       ?? settings?.siteName ?? 'HNB Investment Bank';
+const pageDesc    = description ?? settings?.tagline  ?? 'Sri Lanka\'s premier investment bank.';
+const canonical   = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={pageDesc} />
+  <title>{pageTitle}</title>
+
+  <!-- Canonical -->
+  <link rel="canonical" href={canonical} />
+
+  <!-- OG -->
+  <meta property="og:title"       content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Design system CSS -->
+  <link rel="stylesheet" href={`${base}assets/css/main.css`} />
+</head>
+<body>
+  <Nav base={base} settings={settings} />
+
+  <slot />
+
+  <Footer base={base} settings={settings} />
+
+  <!-- Mobile nav script -->
+  <script>
+    // Hamburger toggle
+    const btn   = document.querySelector<HTMLButtonElement>('.mob-menu-btn');
+    const links = document.querySelector<HTMLElement>('.nav-links');
+    btn?.addEventListener('click', () => {
+      const open = links?.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    // Sub-menu toggle
+    document.querySelectorAll<HTMLButtonElement>('.sub-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        trigger.parentElement?.classList.toggle('open');
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', e => {
+      if (!(e.target as Element)?.closest('.site-nav')) {
+        links?.classList.remove('open');
+        btn?.classList.remove('open');
+        btn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Active link highlight
+    const path = window.location.pathname;
+    document.querySelectorAll<HTMLAnchorElement>('.nav-links a').forEach(a => {
+      if (a.href && new URL(a.href).pathname === path) {
+        a.classList.add('active');
+        a.closest('.has-sub')?.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>

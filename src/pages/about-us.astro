@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSiteSettings, getTeamMembers, imgUrl } from '../lib/strapi';
+
+const base     = import.meta.env.BASE_URL;
+const settings = await getSiteSettings();
+const members  = await getTeamMembers();
+const exec     = members.filter(m => m.department === 'Executive').slice(0, 3);
+---
+
+<BaseLayout
+  title="About Us - HNB Investment Bank"
+  description="HNB Investment Bank Limited is Sri Lanka's premier full-service investment bank, established in 1992 and regulated by the SEC and CBSL."
+>
+  <!-- Hero -->
+  <div id="site-header" class="site-header page-hero-about">
+    <div class="hero-overlay"></div>
+    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
+      <p class="overline">About HNBIB</p>
+      <h1>Sri Lanka's Premier Investment Bank</h1>
+      <p class="hero-sub">
+        Established in {settings?.established ?? 1992}, HNB Investment Bank has built Sri Lanka's most trusted
+        full-service investment banking franchise across four business lines.
+      </p>
+    </div>
+  </div>
+
+  <!-- Story -->
+  <section class="section-pad">
+    <div class="section-inner about-split">
+      <div>
+        <p class="section-eyebrow">Our Story</p>
+        <h2>Three Decades of Capital Markets Excellence</h2>
+        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:var(--sp-m)">
+          Founded in {settings?.established ?? 1992}, HNB Investment Bank Limited was established to bring institutional-grade
+          investment banking services to Sri Lanka's developing capital markets.
+          Over three decades, we have grown into a full-service firm spanning stockbroking, securities, corporate finance, and private equity.
+        </p>
+        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:var(--sp-l)">
+          As part of the HNB Group — one of Sri Lanka's largest licensed commercial banks —
+          we combine deep capital markets expertise with the reach and credibility of a systemically important financial institution.
+        </p>
+        <div class="about-badges">
+          <div class="about-badge">
+            <span class="ab-num">{settings?.cseStatus ?? 'CSE Full Member'}</span>
+          </div>
+          <div class="about-badge">
+            <span class="ab-num">{settings?.cbslStatus ?? 'CBSL Primary Dealer'}</span>
+          </div>
+          <div class="about-badge">
+            <span class="ab-num">SEC Regulated</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-img-wrap">
+        <img
+          src="https://dazzling-virtue-5cf576a094.media.strapiapp.com/business_people_board_room_meeting_53876_138090_a5c6a97eb0.jpg"
+          alt="HNB Investment Bank team"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Milestones -->
+  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
+    <div class="section-inner">
+      <p class="section-eyebrow">Key Milestones</p>
+      <h2 class="section-title">Our Journey</h2>
+      <div class="milestones">
+        {[
+          { year: '1992', event: 'Incorporated as Lanka Securities Limited and appointed as a CBSL Primary Dealer.' },
+          { year: '1996', event: 'Lanka Ventures established as one of Sri Lanka\'s first dedicated private equity managers.' },
+          { year: '2011', event: 'Managed the Union Bank IPO — oversubscribed 300 times on the CSE.' },
+          { year: '2018', event: 'Led one of Sri Lanka\'s largest private debt offerings: Hayleys Rs 7 billion debenture.' },
+          { year: '2022', event: 'Pioneered Sri Lanka\'s first high-yield bond issuance for Fintrex Finance.' },
+          { year: '2024', event: 'Full subscription of Singer Finance LKR 2 billion subordinated debt offering.' },
+        ].map(m => (
+          <div class="milestone">
+            <div class="milestone-year">{m.year}</div>
+            <div class="milestone-line"></div>
+            <div class="milestone-event">{m.event}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Executive team preview -->
+  {exec.length > 0 && (
+    <section class="section-pad">
+      <div class="section-inner">
+        <p class="section-eyebrow">Leadership</p>
+        <h2 class="section-title">Executive Team</h2>
+        <div class="exec-grid">
+          {exec.map(m => (
+            <div class="exec-card">
+              <div class="exec-photo">
+                {m.photo
+                  ? <img src={imgUrl(m.photo, 'medium')} alt={m.name} loading="lazy" />
+                  : <div class="exec-placeholder"><span>{m.name.split(' ').map(n => n[0]).join('').slice(0,2)}</span></div>
+                }
+              </div>
+              <h3 class="exec-name">{m.name}</h3>
+              <p class="exec-role">{m.role}</p>
+            </div>
+          ))}
+        </div>
+        <div style="text-align:center;margin-top:var(--sp-xl)">
+          <a href={`${base}team/`} class="btn btn-outline">Meet the Full Team</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Regulatory -->
+  <section class="section-pad" style="background:oklch(0.20 0.08 242);color:#fff">
+    <div class="section-inner">
+      <p class="section-eyebrow" style="color:oklch(1 0 0/.55)">Regulatory Standing</p>
+      <h2 style="color:#fff">Regulated, Licensed, and Accountable</h2>
+      <div class="reg-grid">
+        {[
+          { body: 'Securities & Exchange Commission', role: 'Primary Regulator', desc: 'Fully licensed and regulated by the SEC of Sri Lanka, adhering to the highest standards of capital market conduct.' },
+          { body: 'Central Bank of Sri Lanka', role: 'Primary Dealer Appointment', desc: 'One of a select group of institutions appointed as a CBSL Primary Dealer — participant in every government securities auction.' },
+          { body: 'Colombo Stock Exchange', role: 'Full Member', desc: 'CSE Full Member with direct access to the exchange, subject to CSE Rules and the SEC Act.' },
+        ].map(reg => (
+          <div class="reg-card">
+            <h3 class="reg-body">{reg.body}</h3>
+            <p class="reg-role">{reg.role}</p>
+            <p class="reg-desc">{reg.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / CTA -->
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="cta-final-sub">
+        {settings?.address}
+      </p>
+      <div class="cta-actions">
+        <a href={`mailto:${settings?.email ?? 'info@hnbib.lk'}`} class="btn btn-primary btn-lg">
+          {settings?.email ?? 'info@hnbib.lk'}
+        </a>
+        <a href={`tel:${settings?.phone ?? '+94112490900'}`} class="btn btn-outline btn-outline-light btn-lg">
+          {settings?.phone ?? '+94 11 2 490 900'}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.page-hero-about {
+  position: relative;
+  background: linear-gradient(135deg, oklch(0.20 0.12 242), oklch(0.36 0.14 252));
+  padding: var(--sp-3xl) 0 var(--sp-2xl);
+  color: #fff;
+  overflow: hidden;
+}
+.page-hero-about .hero-overlay {
+  position: absolute; inset: 0;
+  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/hnbib_cc_1024x808_7a4264ba6d.webp') center/cover no-repeat;
+  opacity: .15;
+}
+.page-hero-inner { max-width: 640px; }
+.page-hero-about .overline { color: oklch(1 0 0 / .60); }
+.page-hero-about h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
+.page-hero-about .hero-sub { color: oklch(1 0 0 / .75); }
+
+/* About split */
+.about-split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2xl); align-items: center; }
+.about-split h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); color: var(--primary); margin: var(--sp-s) 0 var(--sp-l); }
+.about-badges { display: flex; gap: var(--sp-s); flex-wrap: wrap; }
+.about-badge { background: var(--bg); border: 1px solid oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .15); border-radius: 8px; padding: var(--sp-s) var(--sp-m); }
+.ab-num { font-size: 0.82rem; font-weight: 600; color: var(--primary); }
+.about-img-wrap { border-radius: 16px; overflow: hidden; }
+.about-img-wrap img { width: 100%; display: block; object-fit: cover; }
+
+/* Milestones */
+.milestones { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
+.milestone { display: flex; flex-direction: column; }
+.milestone-year { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+.milestone-line { width: 40px; height: 3px; background: var(--accent); margin: var(--sp-s) 0; }
+.milestone-event { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+/* Exec grid */
+.exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
+.exec-card { text-align: center; }
+.exec-photo { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 0 auto var(--sp-m); border: 3px solid oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .15); }
+.exec-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.exec-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), oklch(0.55 0.14 260)); display: flex; align-items: center; justify-content: center; }
+.exec-placeholder span { color: #fff; font-size: 2rem; font-weight: 700; }
+.exec-name { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 4px; }
+.exec-role { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+
+/* Regulatory */
+.reg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
+.reg-card { border: 1px solid oklch(1 0 0 / .15); border-radius: 12px; padding: var(--sp-l); }
+.reg-body { font-size: 0.96rem; font-weight: 600; color: #fff; margin: 0 0 var(--sp-xs); }
+.reg-role { font-size: 0.78rem; color: var(--accent); font-weight: 600; margin: 0 0 var(--sp-m); }
+.reg-desc { font-size: 0.86rem; color: oklch(1 0 0 / .65); line-height: 1.7; margin: 0; }
+
+/* CTA */
+.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .about-split  { grid-template-columns: 1fr; }
+  .milestones   { grid-template-columns: repeat(2, 1fr); }
+  .exec-grid    { grid-template-columns: repeat(3, 1fr); }
+  .reg-grid     { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .milestones   { grid-template-columns: 1fr; }
+  .exec-grid    { grid-template-columns: repeat(2, 1fr); }
+}
+</style>

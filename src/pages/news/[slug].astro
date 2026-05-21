@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getArticles, getArticle, formatDate, imgUrl } from '../../lib/strapi';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map(a => ({
+    params: { slug: a.slug },
+    props:  { article: a },
+  }));
+}
+
+const { article } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+// Re-fetch for body content (getStaticPaths prop may have no body)
+const full = await getArticle(article.slug);
+const body = full?.body ?? null;
+---
+
+<BaseLayout
+  title={`${article.title} - HNBIB Insights`}
+  description={article.excerpt}
+  ogImage={article.featuredImage?.url}
+>
+  <!-- Slim article hero -->
+  <div id="site-header" class="site-header">
+    <div class="article-hero">
+      {article.featuredImage && (
+        <img
+          src={imgUrl(article.featuredImage, 'large')}
+          alt={article.featuredImage.alternativeText ?? article.title}
+          class="article-hero-img"
+        />
+      )}
+      <div class="article-hero-overlay"></div>
+      <div class="article-hero-content section-inner">
+        <div class="article-meta">
+          <a href={`${base}news/`} class="back-link">&larr; All Insights</a>
+          <span class="ac-cat">{article.category}</span>
+        </div>
+        <h1 class="article-hero-title">{article.title}</h1>
+        <div class="article-byline">
+          <span>{formatDate(article.publishDate)}</span>
+          {article.readTime && <span>&bull; {article.readTime}</span>}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article body -->
+  <div class="article-layout section-inner">
+    <article class="article-body">
+      <p class="article-excerpt">{article.excerpt}</p>
+
+      {body && body.length > 0
+        ? <div class="article-content" id="article-content" data-blocks={JSON.stringify(body)}></div>
+        : <p class="article-no-body">Full article content is managed in the CMS. Check back soon.</p>
+      }
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="article-sidebar">
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">About HNBIB</h3>
+        <p>HNB Investment Bank Limited is Sri Lanka's premier full-service investment bank, regulated by the SEC and an appointed CBSL Primary Dealer.</p>
+        <a href={`${base}about-us/`} class="btn btn-outline btn-sm">Learn More</a>
+      </div>
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">Get in Touch</h3>
+        <p>Interested in our services? Our specialists are ready to help.</p>
+        <a href="mailto:info@hnbib.lk" class="btn btn-primary btn-sm">Contact Us</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Back link -->
+  <div class="section-inner" style="padding-block:var(--sp-xl)">
+    <a href={`${base}news/`} class="btn btn-outline">&larr; Back to Insights</a>
+  </div>
+</BaseLayout>
+
+<script>
+  // Render Strapi blocks into HTML
+  const container = document.getElementById('article-content');
+  if (container) {
+    const blocks = JSON.parse(container.dataset.blocks ?? '[]');
+    container.innerHTML = blocks.map((block: any) => renderBlock(block)).join('');
+  }
+
+  function renderBlock(block: any): string {
+    if (!block) return '';
+    switch (block.type) {
+      case 'paragraph':
+        return `<p>${renderChildren(block.children)}</p>`;
+      case 'heading':
+        return `<h${block.level}>${renderChildren(block.children)}</h${block.level}>`;
+      case 'list':
+        const tag = block.format === 'ordered' ? 'ol' : 'ul';
+        const items = (block.children ?? []).map((li: any) => `<li>${renderChildren(li.children)}</li>`).join('');
+        return `<${tag}>${items}</${tag}>`;
+      case 'image':
+        return block.image?.url ? `<figure><img src="${block.image.url}" alt="${block.image.alternativeText ?? ''}" /></figure>` : '';
+      case 'quote':
+        return `<blockquote>${renderChildren(block.children)}</blockquote>`;
+      default:
+        return '';
+    }
+  }
+
+  function renderChildren(children: any[]): string {
+    return (children ?? []).map((child: any) => {
+      if (child.type === 'link') return `<a href="${child.url}">${renderChildren(child.children)}</a>`;
+      let text = child.text ?? '';
+      if (child.bold)          text = `<strong>${text}</strong>`;
+      if (child.italic)        text = `<em>${text}</em>`;
+      if (child.underline)     text = `<u>${text}</u>`;
+      if (child.strikethrough) text = `<s>${text}</s>`;
+      if (child.code)          text = `<code>${text}</code>`;
+      return text;
+    }).join('');
+  }
+</script>
+
+<style>
+/* Hero */
+.article-hero {
+  position: relative;
+  min-height: 55vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: oklch(0.22 0.10 242);
+}
+.article-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.article-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, oklch(0.15 0.10 242 / .92) 0%, oklch(0.15 0.10 242 / .45) 60%, transparent 100%);
+}
+.article-hero-content {
+  position: relative;
+  z-index: 2;
+  padding-bottom: var(--sp-2xl);
+  padding-top: var(--sp-3xl);
+}
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-m);
+  margin-bottom: var(--sp-m);
+}
+.back-link { color: oklch(1 0 0 / .70); font-size: 0.88rem; text-decoration: none; }
+.back-link:hover { color: #fff; }
+.ac-cat { background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+.article-hero-title {
+  color: #fff;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  max-width: 800px;
+  margin: 0 0 var(--sp-m);
+  line-height: 1.2;
+}
+.article-byline { color: oklch(1 0 0 / .65); font-size: 0.88rem; display: flex; gap: var(--sp-m); }
+
+/* Article layout */
+.article-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--sp-2xl);
+  padding-block: var(--sp-2xl);
+  align-items: start;
+}
+.article-excerpt {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text);
+  font-weight: 500;
+  border-left: 4px solid var(--accent);
+  padding-left: var(--sp-m);
+  margin: 0 0 var(--sp-xl);
+}
+.article-content { line-height: 1.8; }
+.article-content p  { margin-bottom: var(--sp-m); }
+.article-content h2 { font-size: 1.4rem; color: var(--primary); margin: var(--sp-xl) 0 var(--sp-m); }
+.article-content h3 { font-size: 1.15rem; color: var(--primary); margin: var(--sp-l) 0 var(--sp-s); }
+.article-content ul, .article-content ol { padding-left: var(--sp-l); margin-bottom: var(--sp-m); }
+.article-content li { margin-bottom: var(--sp-xs); }
+.article-content blockquote { border-left: 4px solid var(--accent); padding: var(--sp-m) var(--sp-l); background: var(--bg); border-radius: 0 8px 8px 0; font-style: italic; }
+.article-content figure { margin: var(--sp-xl) 0; }
+.article-content figure img { width: 100%; border-radius: 8px; }
+.article-no-body { color: var(--text-muted); font-style: italic; }
+
+/* Sidebar */
+.sidebar-card { background: var(--bg); border-radius: 12px; padding: var(--sp-m); margin-bottom: var(--sp-m); border: 1px solid oklch(0 0 0 / .07); }
+.sidebar-title { font-size: 0.95rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
+.sidebar-card p { font-size: 0.88rem; color: var(--text-muted); margin: 0 0 var(--sp-m); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .article-layout { grid-template-columns: 1fr; }
+  .article-sidebar { display: none; }
+}
+</style>

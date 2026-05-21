@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="HNB Stockbrokers - CSE Full Member"
+  description="Your gateway to Sri Lanka's equity market. Full-service CSE brokerage with real-time trading, in-house research, and institutional execution."
+>
+  <div id="site-header" class="site-header page-hero-sb">
+    <div class="hero-overlay"></div>
+    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
+      <p class="overline">HNB Stockbrokers</p>
+      <h1>Your Gateway to Sri Lanka's Equity Market</h1>
+      <p class="hero-sub">
+        Full-service CSE brokerage backed by the HNB Group.
+        Real-time trading, in-house research, and institutional execution.
+      </p>
+      <div style="display:flex;gap:var(--sp-m);flex-wrap:wrap;margin-top:var(--sp-l)">
+        <a href="mailto:stockbrokers@hnbib.lk" class="btn btn-primary">Open an Account</a>
+        <a href={`${base}news/`} class="btn btn-outline btn-outline-light">Market Insights</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <section class="section-pad">
+    <div class="section-inner">
+      <p class="section-eyebrow">What We Offer</p>
+      <h2 class="section-title">Brokerage Services</h2>
+      <div class="sb-grid">
+        {[
+          { icon: '📈', title: 'Equities Trading', desc: 'Access all CSE-listed equities with competitive brokerage rates. Our trading desk provides seamless order execution for retail and institutional clients.' },
+          { icon: '🔬', title: 'In-House Research', desc: 'Proprietary equity research covering key listed companies. Fundamental analysis, earnings forecasts, and actionable investment recommendations.' },
+          { icon: '🏛️', title: 'Institutional Services', desc: 'Dedicated institutional trading desk for asset managers, insurance companies, provident funds, and foreign institutional investors.' },
+          { icon: '💼', title: 'Portfolio Advisory', desc: 'Personalised portfolio advisory services aligned with your risk profile and investment objectives. Regular reviews and market updates.' },
+          { icon: '🌐', title: 'Online Trading', desc: 'Trade on the go with our digital platform. Real-time quotes, order management, and portfolio tracking from any device.' },
+          { icon: '📚', title: 'IPO Management', desc: 'Advice and execution on IPO subscriptions. We keep you informed on upcoming listings and help you participate at the best price.' },
+        ].map(item => (
+          <div class="sb-card">
+            <div class="sb-icon">{item.icon}</div>
+            <h3 class="sb-title">{item.title}</h3>
+            <p class="sb-desc">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
+    <div class="section-inner cred-split">
+      <div>
+        <p class="section-eyebrow">Our Credentials</p>
+        <h2 class="section-title">CSE Full Member</h2>
+        <p style="color:var(--text-muted);line-height:1.8;margin-bottom:var(--sp-l)">
+          HNB Stockbrokers is a Full Member of the Colombo Stock Exchange, subject to the highest regulatory standards in Sri Lanka's capital markets.
+          With over three decades of market experience, we combine institutional expertise with personalised service.
+        </p>
+        <ul class="cred-list">
+          <li>CSE Full Member since inception</li>
+          <li>Regulated by the Securities &amp; Exchange Commission</li>
+          <li>HNB Group network of over 250 branches</li>
+          <li>Dedicated research and advisory teams</li>
+        </ul>
+      </div>
+      <div class="cred-img-wrap">
+        <img src="https://dazzling-virtue-5cf576a094.media.strapiapp.com/Home_page_slider_1_1_e9a9bdf6ce.webp" alt="HNB Stockbrokers" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad cta-final">
+    <div class="cta-final-inner">
+      <h2 class="section-title">Start Trading Today</h2>
+      <p class="cta-final-sub">Open a CDS account and begin investing in Sri Lanka's equity market with the guidance of our experienced team.</p>
+      <div class="cta-actions">
+        <a href="mailto:stockbrokers@hnbib.lk" class="btn btn-primary btn-lg">Get Started</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+.page-hero-sb {
+  position: relative;
+  background: linear-gradient(135deg, oklch(0.20 0.12 242), oklch(0.36 0.16 250));
+  padding: var(--sp-3xl) 0 var(--sp-2xl);
+  color: #fff;
+  overflow: hidden;
+}
+.page-hero-sb .hero-overlay {
+  position: absolute; inset: 0;
+  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/Home_page_slider_1_1_e9a9bdf6ce.webp') center/cover no-repeat;
+  opacity: .18;
+}
+.page-hero-inner { max-width: 640px; }
+.page-hero-sb .overline { color: oklch(1 0 0 / .60); }
+.page-hero-sb h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
+.page-hero-sb .hero-sub { color: oklch(1 0 0 / .75); }
+
+.sb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-l);
+  margin-top: var(--sp-xl);
+}
+.sb-card { background: var(--bg); border-radius: 12px; padding: var(--sp-l); border: 1px solid oklch(0 0 0 / .07); }
+.sb-icon { font-size: 1.8rem; margin-bottom: var(--sp-m); }
+.sb-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
+.sb-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
+
+.cred-split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2xl); align-items: center; }
+.cred-list { list-style: none; padding: 0; margin: 0; }
+.cred-list li { padding: var(--sp-s) 0; border-bottom: 1px solid oklch(0 0 0 / .07); font-size: 0.9rem; color: var(--text-muted); padding-left: var(--sp-m); position: relative; }
+.cred-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.cred-img-wrap { border-radius: 16px; overflow: hidden; }
+.cred-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
+.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
+.cta-final .section-title { color: #fff; }
+.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
+.cta-actions { display: flex; justify-content: center; }
+
+@media (max-width: 900px) { .sb-grid { grid-template-columns: repeat(2, 1fr); } .cred-split { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .sb-grid { grid-template-columns: 1fr; } }
+</style>
