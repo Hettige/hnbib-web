@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="oklch(0.42 0.14 242)"/>
+  <text x="5" y="23" font-family="'Outfit',system-ui,sans-serif" font-size="16" font-weight="800" fill="#ffffff">HN</text>
+  <rect x="0" y="26" width="32" height="6" rx="0" fill="oklch(0.62 0.16 141)"/>
+</svg>

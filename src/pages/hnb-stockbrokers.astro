@@ -1,128 +1,138 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const base = import.meta.env.BASE_URL;
+import { getArticles, formatDate } from '../lib/strapi';
+
+const base     = import.meta.env.BASE_URL;
+const articles = await getArticles({ limit: 3 });
 ---
 
 <BaseLayout
-  title="HNB Stockbrokers - CSE Full Member"
-  description="Your gateway to Sri Lanka's equity market. Full-service CSE brokerage with real-time trading, in-house research, and institutional execution."
+  title="HNB Stockbrokers — CSE Full Member"
+  description="Research-driven CSE brokerage with online &amp; mobile trading for retail, HNW, and institutional clients."
 >
-  <div id="site-header" class="site-header page-hero-sb">
-    <div class="hero-overlay"></div>
-    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
-      <p class="overline">HNB Stockbrokers</p>
-      <h1>Your Gateway to Sri Lanka's Equity Market</h1>
-      <p class="hero-sub">
-        Full-service CSE brokerage backed by the HNB Group.
-        Real-time trading, in-house research, and institutional execution.
-      </p>
-      <div style="display:flex;gap:var(--sp-m);flex-wrap:wrap;margin-top:var(--sp-l)">
-        <a href="mailto:stockbrokers@hnbib.lk" class="btn btn-primary">Open an Account</a>
-        <a href={`${base}news/`} class="btn btn-outline btn-outline-light">Market Insights</a>
-      </div>
-    </div>
-  </div>
 
-  <!-- Services -->
-  <section class="section-pad">
-    <div class="section-inner">
-      <p class="section-eyebrow">What We Offer</p>
-      <h2 class="section-title">Brokerage Services</h2>
-      <div class="sb-grid">
-        {[
-          { icon: '📈', title: 'Equities Trading', desc: 'Access all CSE-listed equities with competitive brokerage rates. Our trading desk provides seamless order execution for retail and institutional clients.' },
-          { icon: '🔬', title: 'In-House Research', desc: 'Proprietary equity research covering key listed companies. Fundamental analysis, earnings forecasts, and actionable investment recommendations.' },
-          { icon: '🏛️', title: 'Institutional Services', desc: 'Dedicated institutional trading desk for asset managers, insurance companies, provident funds, and foreign institutional investors.' },
-          { icon: '💼', title: 'Portfolio Advisory', desc: 'Personalised portfolio advisory services aligned with your risk profile and investment objectives. Regular reviews and market updates.' },
-          { icon: '🌐', title: 'Online Trading', desc: 'Trade on the go with our digital platform. Real-time quotes, order management, and portfolio tracking from any device.' },
-          { icon: '📚', title: 'IPO Management', desc: 'Advice and execution on IPO subscriptions. We keep you informed on upcoming listings and help you participate at the best price.' },
-        ].map(item => (
-          <div class="sb-card">
-            <div class="sb-icon">{item.icon}</div>
-            <h3 class="sb-title">{item.title}</h3>
-            <p class="sb-desc">{item.desc}</p>
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">HNB Stockbrokers · CSE Full Member</div>
+  <h1 class="page-header-h1">Research-driven stockbroking for Sri Lanka's equity market.</h1>
+  <p class="page-header-lead">Trade the Colombo Stock Exchange with real-time data, institutional-grade research, and dedicated advisory — online or through our desk.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- Platform + live market data -->
+<section class="section-host" data-section-id="s1-platform" data-section-label="Platform">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad"><div class="section-inner">
+      <div style="display:grid;grid-template-columns:3fr 2fr;gap:var(--sp-l);align-items:start">
+        <div class="reveal">
+          <div class="section-eyebrow">The Platform</div>
+          <h2 class="section-h2">Trade smarter. Every session.</h2>
+          <p class="section-lead">Real-time CSE quotes, research-led stock picks, and seamless execution — built for investors who mean business.</p>
+          <div class="feat-row" style="margin-top:var(--sp-m)">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 15L8 9l4 3 5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><div class="feat-name">Live CSE Quotes</div><div class="feat-desc">ASPI and S&amp;P SL20 in real time with depth-of-market data.</div></div>
           </div>
-        ))}
+          <div class="feat-row">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div><div class="feat-name">Research Reports</div><div class="feat-desc">Equity and sector research produced by our in-house analyst team.</div></div>
+          </div>
+          <div class="feat-row">
+            <div class="feat-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div><div class="feat-name">Advisory Access</div><div class="feat-desc">Dedicated broker for HNW and institutional clients.</div></div>
+          </div>
+          <div style="margin-top:var(--sp-m);display:flex;gap:12px">
+            <a href="mailto:info@hnbib.lk" class="btn-primary">Open Account →</a>
+            <a href={`${base}news/`} class="btn-ghost">View Research</a>
+          </div>
+        </div>
+        <div class="mkt-panel reveal">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:oklch(1 0 0/.40);margin-bottom:4px">Live — CSE Indices</div>
+          <div class="mkt-row"><div><div class="mkt-name">All Share Price Index</div><div class="mkt-val" data-count-to="22905" data-count-from="22400">22,400</div></div><div class="mkt-chg">▲ 0.38%</div></div>
+          <div class="mkt-row"><div><div class="mkt-name">S&amp;P SL20</div><div class="mkt-val" data-count-to="6284" data-count-from="6100">6,100</div></div><div class="mkt-chg">▲ 0.27%</div></div>
+          <div class="mkt-row"><div><div class="mkt-name">Daily Volume</div><div class="mkt-val">97.8M</div></div><div style="font-size:11px;color:oklch(1 0 0/.45)">shares</div></div>
+          <div class="mkt-row"><div><div class="mkt-name">Daily Turnover</div><div class="mkt-val">LKR 2.85 Bn</div></div></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <!-- Why us -->
-  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
-    <div class="section-inner cred-split">
-      <div>
-        <p class="section-eyebrow">Our Credentials</p>
-        <h2 class="section-title">CSE Full Member</h2>
-        <p style="color:var(--text-muted);line-height:1.8;margin-bottom:var(--sp-l)">
-          HNB Stockbrokers is a Full Member of the Colombo Stock Exchange, subject to the highest regulatory standards in Sri Lanka's capital markets.
-          With over three decades of market experience, we combine institutional expertise with personalised service.
-        </p>
-        <ul class="cred-list">
-          <li>CSE Full Member since inception</li>
-          <li>Regulated by the Securities &amp; Exchange Commission</li>
-          <li>HNB Group network of over 250 branches</li>
-          <li>Dedicated research and advisory teams</li>
-        </ul>
+<!-- What we offer -->
+<section class="section-host" data-section-id="s2-services" data-section-label="Services">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">What We Offer</div><h2 class="section-h2">Research. Advisory. Execution.</h2></div>
+      <div class="grid-3">
+        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Equity Research</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">In-house analyst coverage of CSE-listed companies — sector reports, company updates, and buy/sell recommendations.</div></div>
+        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Online Trading</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">Execute on the CSE through our digital platform with real-time quotes, order management, and portfolio tracking.</div></div>
+        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Advisory Brokerage</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">A dedicated broker for HNW and institutional clients — personalised strategy, block trades, and discretionary execution.</div></div>
       </div>
-      <div class="cred-img-wrap">
-        <img src="https://dazzling-virtue-5cf576a094.media.strapiapp.com/Home_page_slider_1_1_e9a9bdf6ce.webp" alt="HNB Stockbrokers" />
-      </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <section class="section-pad cta-final">
-    <div class="cta-final-inner">
-      <h2 class="section-title">Start Trading Today</h2>
-      <p class="cta-final-sub">Open a CDS account and begin investing in Sri Lanka's equity market with the guidance of our experienced team.</p>
-      <div class="cta-actions">
-        <a href="mailto:stockbrokers@hnbib.lk" class="btn btn-primary btn-lg">Get Started</a>
+<!-- Research -->
+<section class="section-host" data-section-id="s3-research" data-section-label="Research">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad"><div class="section-inner">
+      <div class="section-header reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+        <div><div class="section-eyebrow">Latest Research</div><h2 class="section-h2">Market intelligence from our desk.</h2></div>
+        <a href={`${base}news/`} class="btn-ghost">All insights →</a>
       </div>
-    </div>
-  </section>
+      <div class="grid-3">
+        {articles.length > 0 ? articles.map(a => (
+          <a href={`${base}news/${a.slug}/`} class="research-card reveal" style="text-decoration:none;color:inherit">
+            <div class="research-card-thumb">{a.category.slice(0,3).toUpperCase()}</div>
+            <div class="research-card-body">
+              <div class="research-tag">{a.category}</div>
+              <div class="research-title">{a.title}</div>
+              <div class="research-date">{formatDate(a.publishDate)}</div>
+            </div>
+          </a>
+        )) : (
+          <>
+            <div class="research-card reveal"><div class="research-card-thumb" style="background:var(--primary)">CSE</div><div class="research-card-body"><div class="research-tag">Equity</div><div class="research-title">ASPI Crosses 22,000</div><div class="research-date">15 May 2026</div></div></div>
+            <div class="research-card reveal"><div class="research-card-thumb">FI</div><div class="research-card-body"><div class="research-tag">Fixed Income</div><div class="research-title">T-Bill Yields Ease for Third Auction</div><div class="research-date">12 May 2026</div></div></div>
+            <div class="research-card reveal"><div class="research-card-thumb" style="background:var(--bg-2)">BKG</div><div class="research-card-body"><div class="research-tag">Sector</div><div class="research-title">CSE Banks Sector — Q1 2026 Review</div><div class="research-date">8 May 2026</div></div></div>
+          </>
+        )}
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<div class="cta-final"><div class="cta-final-inner">
+  <h2 class="cta-final-h2 reveal">Ready to trade the CSE?</h2>
+  <p class="cta-final-sub reveal">Open a stockbroking account and access research-driven execution with HNB Investment Bank.</p>
+  <div class="cta-final-btns reveal">
+    <a href="mailto:info@hnbib.lk" class="btn-white">Open Account</a>
+    <a href="mailto:info@hnbib.lk" class="btn-ghost-white">Speak to a Broker →</a>
+  </div>
+  <div class="cta-trust reveal"><span>CSE Full Member</span><span class="dot">·</span><span>Research-Led</span><span class="dot">·</span><span>Est. 1992</span></div>
+</div></div>
+
+</main>
+
 </BaseLayout>
 
 <style>
-.page-hero-sb {
-  position: relative;
-  background: linear-gradient(135deg, oklch(0.20 0.12 242), oklch(0.36 0.16 250));
-  padding: var(--sp-3xl) 0 var(--sp-2xl);
-  color: #fff;
-  overflow: hidden;
+.mkt-panel { background: var(--primary); border-radius: var(--radius); padding: var(--sp-m); display: flex; flex-direction: column; gap: 12px; }
+.mkt-name { font-size: 12px; color: oklch(1 0 0/.60); }
+.mkt-val  { font-size: 18px; font-weight: 800; color: #fff; }
+.mkt-chg  { font-size: 11px; color: oklch(0.85 0.16 141); }
+.feat-row { display: flex; align-items: flex-start; gap: 16px; padding: var(--sp-m) 0; border-bottom: 1px solid var(--line); }
+.feat-row:last-child { border-bottom: none; }
+.feat-icon { width: 40px; height: 40px; flex-shrink: 0; background: var(--primary); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: #fff; }
+.feat-name { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.feat-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.research-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: block; transition: box-shadow .2s; }
+.research-card:hover { box-shadow: 0 8px 24px oklch(0.42 0.14 242/.10); }
+.research-card-thumb { height: 120px; background: var(--bg-2); display: flex; align-items: center; justify-content: center; color: var(--ink-3); font-size: 32px; font-weight: 800; }
+.research-card-body { padding: 16px; }
+.research-tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
+.research-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.research-date { font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+@media (max-width: 900px) {
+  .section-inner > div[style*="3fr 2fr"] { grid-template-columns: 1fr !important; }
 }
-.page-hero-sb .hero-overlay {
-  position: absolute; inset: 0;
-  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/Home_page_slider_1_1_e9a9bdf6ce.webp') center/cover no-repeat;
-  opacity: .18;
-}
-.page-hero-inner { max-width: 640px; }
-.page-hero-sb .overline { color: oklch(1 0 0 / .60); }
-.page-hero-sb h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
-.page-hero-sb .hero-sub { color: oklch(1 0 0 / .75); }
-
-.sb-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-l);
-  margin-top: var(--sp-xl);
-}
-.sb-card { background: var(--bg); border-radius: 12px; padding: var(--sp-l); border: 1px solid oklch(0 0 0 / .07); }
-.sb-icon { font-size: 1.8rem; margin-bottom: var(--sp-m); }
-.sb-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
-.sb-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
-
-.cred-split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2xl); align-items: center; }
-.cred-list { list-style: none; padding: 0; margin: 0; }
-.cred-list li { padding: var(--sp-s) 0; border-bottom: 1px solid oklch(0 0 0 / .07); font-size: 0.9rem; color: var(--text-muted); padding-left: var(--sp-m); position: relative; }
-.cred-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
-.cred-img-wrap { border-radius: 16px; overflow: hidden; }
-.cred-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
-.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
-.cta-final .section-title { color: #fff; }
-.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
-.cta-actions { display: flex; justify-content: center; }
-
-@media (max-width: 900px) { .sb-grid { grid-template-columns: repeat(2, 1fr); } .cred-split { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .sb-grid { grid-template-columns: 1fr; } }
 </style>

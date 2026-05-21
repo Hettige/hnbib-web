@@ -1,8 +1,4 @@
 ---
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
-import { getSiteSettings } from '../lib/strapi';
-
 interface Props {
   title?: string;
   description?: string;
@@ -10,83 +6,143 @@ interface Props {
 }
 
 const { title, description, ogImage } = Astro.props;
-const settings = await getSiteSettings();
 const base = import.meta.env.BASE_URL;
 
-const pageTitle   = title       ?? settings?.siteName ?? 'HNB Investment Bank';
-const pageDesc    = description ?? settings?.tagline  ?? 'Sri Lanka\'s premier investment bank.';
-const canonical   = new URL(Astro.url.pathname, Astro.site).href;
+const pageTitle = title       ?? 'HNB Investment Bank';
+const pageDesc  = description ?? "Sri Lanka's leading full-service investment bank since 1992.";
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content={pageDesc} />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="icon" href={`${base}assets/images/favicon.svg`} type="image/svg+xml" />
   <title>{pageTitle}</title>
-
-  <!-- Canonical -->
-  <link rel="canonical" href={canonical} />
-
-  <!-- OG -->
+  <meta name="description" content={pageDesc} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
   <meta property="og:title"       content={pageTitle} />
   <meta property="og:description" content={pageDesc} />
-  {ogImage && <meta property="og:image" content={ogImage} />}
-  <meta property="og:type" content="website" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Design system CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href={`${base}assets/css/section-toggle.css`} />
   <link rel="stylesheet" href={`${base}assets/css/main.css`} />
 </head>
-<body>
-  <Nav base={base} settings={settings} />
+<body class="tx-clean motion-full density-standard">
 
+  <!-- Ticker bar + sticky nav (exact prototype structure) -->
+  <div id="site-header-wrap">
+    <div class="ticker-bar" aria-label="Live market data">
+      <div class="ticker-track motion-continuous">
+        <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
+        <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
+        <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
+        <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
+        <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
+        <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
+        <span><span class="t-lbl">REPO</span> 7.50%</span>
+        <span><span class="t-lbl">USD/LKR</span> 302.45</span>
+        <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
+        <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
+        <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
+        <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
+        <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
+        <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
+        <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
+        <span><span class="t-lbl">REPO</span> 7.50%</span>
+        <span><span class="t-lbl">USD/LKR</span> 302.45</span>
+        <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav (exact prototype nav HTML, paths via base) -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a class="nav-logo" href={base}>
+        <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="38" />
+      </a>
+      <ul class="nav-links">
+        <li class="mob-logo-li">
+          <a href={base}>
+            <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="36" />
+          </a>
+        </li>
+        <li><a href={`${base}about-us/`}>About</a></li>
+        <li><a href={`${base}hnb-stockbrokers/`}>Stockbrokers</a></li>
+        <li><a href={`${base}hnb-securities/`}>Securities</a></li>
+        <li><a href={`${base}corporate-finance/`}>Corporate Finance</a></li>
+        <li><a href={`${base}lanka-ventures-lvl/`}>Lanka Ventures</a></li>
+        <li><a href={`${base}news/`}>News</a></li>
+        <li><a href={`${base}team/`}>Team</a></li>
+      </ul>
+      <a class="btn-primary" href="mailto:info@hnbib.lk">Contact</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page content -->
   <slot />
 
-  <Footer base={base} settings={settings} />
+  <!-- Footer (exact prototype footer HTML) -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="nav-logo" href={base}>
+          <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="32" style="filter:brightness(0) invert(1)" />
+        </a>
+        <p>No. 53 Srimath Anagarika Dharmapala Mawatha, Colombo 03, Sri Lanka.<br />
+        Regulated by the Securities &amp; Exchange Commission of Sri Lanka.</p>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li><a href={`${base}hnb-stockbrokers/`}>HNB Stockbrokers</a></li>
+          <li><a href={`${base}hnb-securities/`}>HNB Securities</a></li>
+          <li><a href={`${base}corporate-finance/`}>Corporate Finance</a></li>
+          <li><a href={`${base}lanka-ventures-lvl/`}>Lanka Ventures</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Fixed Income</h5>
+        <ul>
+          <li><a href={`${base}hnb-securities/`}>Repurchase Agreements</a></li>
+          <li><a href={`${base}hnb-securities/`}>Treasury Bills</a></li>
+          <li><a href={`${base}hnb-securities/`}>T-Bond Market</a></li>
+          <li><a href={`${base}hnb-securities/`}>Rate Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href={`${base}about-us/`}>About Us</a></li>
+          <li><a href={`${base}team/`}>Our Team</a></li>
+          <li><a href={`${base}news/`}>News &amp; Insights</a></li>
+          <li><a href="mailto:careers@hnbib.lk">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="https://hnbib.lk/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
+          <li><a href="https://hnbib.lk/terms-and-conditions" target="_blank" rel="noopener">Terms &amp; Conditions</a></li>
+          <li><a href="mailto:info@hnbib.lk">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div style="max-width:var(--content-w);margin:0 auto;padding:0 var(--sp-m) var(--sp-m);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span>&copy; 2026 HNB Investment Bank Limited. All rights reserved.</span>
+        <span>SEC Licensed &middot; CSE Full Member &middot; CBSL Primary Dealer</span>
+      </div>
+    </div>
+  </footer>
 
-  <!-- Mobile nav script -->
-  <script>
-    // Hamburger toggle
-    const btn   = document.querySelector<HTMLButtonElement>('.mob-menu-btn');
-    const links = document.querySelector<HTMLElement>('.nav-links');
-    btn?.addEventListener('click', () => {
-      const open = links?.classList.toggle('open');
-      btn.classList.toggle('open', open);
-      btn.setAttribute('aria-expanded', String(open));
-    });
+  <!-- Main JS (handles reveal, count-up, sparklines, mobile nav, etc.) -->
+  <script src={`${base}assets/js/main.js`}></script>
 
-    // Sub-menu toggle
-    document.querySelectorAll<HTMLButtonElement>('.sub-trigger').forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        trigger.parentElement?.classList.toggle('open');
-      });
-    });
-
-    // Close on outside click
-    document.addEventListener('click', e => {
-      if (!(e.target as Element)?.closest('.site-nav')) {
-        links?.classList.remove('open');
-        btn?.classList.remove('open');
-        btn?.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Active link highlight
-    const path = window.location.pathname;
-    document.querySelectorAll<HTMLAnchorElement>('.nav-links a').forEach(a => {
-      if (a.href && new URL(a.href).pathname === path) {
-        a.classList.add('active');
-        a.closest('.has-sub')?.classList.add('active');
-      }
-    });
-  </script>
 </body>
 </html>

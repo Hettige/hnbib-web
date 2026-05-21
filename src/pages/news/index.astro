@@ -9,182 +9,388 @@ const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnershi
 ---
 
 <BaseLayout
-  title="Insights - HNB Investment Bank"
-  description="Market commentary, corporate finance updates, and company news from HNB Investment Bank."
+  title="Insights &amp; Newsroom — HNB Investment Bank"
+  description="Research, deal announcements, and company news — from our desk to yours."
 >
-  <!-- Page hero -->
-  <div id="site-header" class="site-header page-hero-simple">
-    <div class="page-hero-inner section-inner">
-      <p class="overline">News &amp; Insights</p>
-      <h1>HNBIB Insights</h1>
-      <p class="hero-sub">Market commentary, transaction announcements, and company updates.</p>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">Insights &amp; Newsroom</div>
+  <h1 class="page-header-h1">Market intelligence from HNB Investment Bank.</h1>
+  <p class="page-header-lead">Research, deal announcements, and company news — from our desk to yours.</p>
+</div></div>
+
+<main class="page-body">
+<section class="section-pad">
+  <div class="section-inner" style="max-width:100%;padding:0">
+
+    <!-- Filter tabs -->
+    <div class="news-filters" role="tablist" aria-label="Filter articles by category">
+      {categories.map((cat, i) => (
+        <button class={`news-filter-btn${i === 0 ? ' active' : ''}`} data-cat={cat} role="tab" aria-selected={i === 0 ? 'true' : 'false'}>{cat}</button>
+      ))}
     </div>
-  </div>
 
-  <section class="section-pad">
-    <div class="section-inner">
+    <!-- Result count -->
+    <div class="news-count" id="news-count" aria-live="polite">{articles.length} article{articles.length !== 1 ? 's' : ''}</div>
 
-      <!-- Category filter tabs -->
-      <div class="filter-tabs" role="tablist" aria-label="Filter articles by category">
-        {categories.map(cat => (
-          <button
-            class="filter-tab"
-            data-cat={cat}
-            role="tab"
-            aria-selected={cat === 'All' ? 'true' : 'false'}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      <!-- Article grid -->
-      <div id="articles-grid" class="articles-grid">
-        {articles.map((a, i) => (
-          <a
-            href={`${base}news/${a.slug}/`}
-            class:list={['article-card', i === 0 && 'article-card--featured']}
-            data-category={a.category}
-          >
-            <div class="ac-img">
-              {a.featuredImage
-                ? <img src={imgUrl(a.featuredImage, i === 0 ? 'medium' : 'small')} alt={a.featuredImage.alternativeText ?? a.title} loading={i < 3 ? 'eager' : 'lazy'} />
-                : <div class="ac-img-placeholder"></div>
+    <!-- Article grid (rendered statically, filtered via JS) -->
+    <div class="news-grid-wrap" id="news-grid">
+      {articles.length > 0 ? (
+        <>
+          <!-- Featured: first article -->
+          <a href={`${base}news/${articles[0].slug}/`} class="nc-featured" data-category={articles[0].category}>
+            <div class="nc-featured-img">
+              {articles[0].featuredImage
+                ? <img src={imgUrl(articles[0].featuredImage, 'medium')} alt={articles[0].featuredImage.alternativeText ?? articles[0].title} loading="eager" />
+                : <div style="width:100%;height:100%;background:oklch(0.36 0.14 242)"></div>
               }
-              <span class="ac-cat">{a.category}</span>
+              <div class="nc-featured-img-overlay"></div>
+              <div class="nc-featured-badge">Featured</div>
             </div>
-            <div class="ac-body">
-              <p class="ac-date">{formatDate(a.publishDate)}</p>
-              <h2 class="ac-title">{a.title}</h2>
-              <p class="ac-excerpt">{a.excerpt}</p>
-              <span class="ac-read">{a.readTime ?? '3 min read'} &rarr;</span>
+            <div class="nc-featured-body">
+              <span class="nc-featured-tag">{articles[0].category}</span>
+              <div class="nc-featured-title">{articles[0].title}</div>
+              <div class="nc-featured-excerpt">{articles[0].excerpt}</div>
+              <div class="nc-featured-meta">{formatDate(articles[0].publishDate)} &middot; {articles[0].readTime ?? '5 min read'}</div>
+              <div class="nc-featured-cta">Read article <span aria-hidden="true">→</span></div>
             </div>
           </a>
-        ))}
-      </div>
 
-      <!-- No results message (hidden by default) -->
-      <p id="no-results" class="no-results" hidden>
-        No articles in this category yet.
-      </p>
-
+          <!-- Remaining articles grid -->
+          {articles.slice(1).length > 0 && (
+            <div class="news-cards-grid" id="news-cards-grid">
+              {articles.slice(1).map(a => (
+                <a href={`${base}news/${a.slug}/`} class="nc" data-category={a.category}>
+                  <div class="nc-img">
+                    {a.featuredImage
+                      ? <img src={imgUrl(a.featuredImage, 'small')} alt={a.featuredImage.alternativeText ?? a.title} loading="lazy" />
+                      : <div style="width:100%;height:100%;background:oklch(0.96 0.008 242)"></div>
+                    }
+                    <div class="nc-img-overlay"></div>
+                  </div>
+                  <div class="nc-body">
+                    <div class="nc-tag">{a.category}</div>
+                    <div class="nc-title">{a.title}</div>
+                    <div class="nc-footer">
+                      <span class="nc-meta">{formatDate(a.publishDate)} &middot; {a.readTime ?? '3 min read'}</span>
+                      <span class="nc-read">Read <span aria-hidden="true">→</span></span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div class="news-empty">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <p>No articles yet. Check back soon.</p>
+        </div>
+      )}
     </div>
-  </section>
+
+  </div>
+</section>
+</main>
+
 </BaseLayout>
 
 <script>
-  // Category filtering (client-side, no reload)
-  const tabs  = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
-  const cards = document.querySelectorAll<HTMLElement>('.article-card');
-  const noRes = document.getElementById('no-results')!;
+(function () {
+  'use strict';
+
+  var currentCat = 'all';
 
   function filter(cat: string) {
+    currentCat = cat.toLowerCase() === 'all' ? 'all' : cat;
+
+    const featured = document.querySelector<HTMLElement>('.nc-featured');
+    const cards    = document.querySelectorAll<HTMLElement>('.nc');
+    const count    = document.getElementById('news-count');
+
     let visible = 0;
+
+    if (featured) {
+      const show = currentCat === 'all' || (featured.dataset.category ?? '') === cat;
+      featured.style.display = show ? '' : 'none';
+      if (show) visible++;
+    }
+
     cards.forEach(card => {
-      const show = cat === 'All' || card.dataset.category === cat;
-      card.hidden = !show;
+      const show = currentCat === 'all' || (card.dataset.category ?? '') === cat;
+      card.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-    noRes.hidden = visible > 0;
-    tabs.forEach(t => {
-      const isActive = t.dataset.cat === cat;
-      t.setAttribute('aria-selected', String(isActive));
-      t.classList.toggle('active', isActive);
-    });
+
+    if (count) {
+      count.textContent = visible + ' article' + (visible !== 1 ? 's' : '') +
+        (currentCat !== 'all' ? ' in ' + cat : '');
+    }
   }
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => filter(tab.dataset.cat ?? 'All'));
+  document.querySelectorAll<HTMLButtonElement>('.news-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll<HTMLButtonElement>('.news-filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+      filter(this.dataset.cat ?? 'All');
+    });
   });
-
-  // Set first tab active on load
-  tabs[0]?.classList.add('active');
+})();
 </script>
 
 <style>
-.page-hero-simple {
-  background: linear-gradient(135deg, oklch(0.22 0.10 242), oklch(0.34 0.14 260));
-  padding: var(--sp-3xl) 0 var(--sp-2xl);
-  color: #fff;
-}
-.page-hero-inner { max-width: 640px; }
-.page-hero-simple .overline { color: oklch(1 0 0 / .60); }
-.page-hero-simple h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
-.page-hero-simple .hero-sub { color: oklch(1 0 0 / .75); }
-
-/* Filter tabs */
-.filter-tabs {
+.news-filters {
   display: flex;
-  gap: var(--sp-s);
+  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: var(--sp-xl);
+  margin-bottom: var(--sp-m);
   padding-bottom: var(--sp-m);
-  border-bottom: 1px solid oklch(0 0 0 / .08);
+  border-bottom: 1px solid var(--line);
 }
-.filter-tab {
-  background: none;
-  border: 1px solid oklch(0 0 0 / .12);
-  border-radius: 99px;
-  padding: var(--sp-xs) var(--sp-m);
-  font-family: inherit;
-  font-size: 0.85rem;
+.news-filter-btn {
+  padding: 8px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--line);
+  border-radius: 100px;
+  background: var(--card);
+  color: var(--ink-2);
   cursor: pointer;
-  color: var(--text-muted);
-  transition: background .15s, color .15s, border-color .15s;
+  font-family: var(--font);
+  transition: all var(--dur-fast);
+  white-space: nowrap;
 }
-.filter-tab.active,
-.filter-tab[aria-selected="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-}
-.filter-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+.news-filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.news-filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-/* Articles grid */
-.articles-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-l);
+.news-count {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: var(--sp-m);
+  min-height: 20px;
 }
-/* Featured article spans full width */
-.article-card--featured {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.article-card--featured .ac-img { aspect-ratio: 16/9; }
-.article-card--featured .ac-title { font-size: 1.4rem; }
 
-.article-card {
+.news-grid-wrap { transition: opacity .22s ease; }
+.news-grid-wrap.fading { opacity: 0; pointer-events: none; }
+
+.nc-featured {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) * 2);
+  overflow: hidden;
+  margin-bottom: var(--sp-m);
+  min-height: 340px;
   text-decoration: none;
   color: inherit;
-  border-radius: 12px;
+  transition: box-shadow var(--dur-mid), transform var(--dur-mid);
+}
+.nc-featured:hover {
+  box-shadow: 0 16px 48px oklch(0.42 0.14 242/.13);
+  transform: translateY(-2px);
+}
+.nc-featured-img {
+  position: relative;
   overflow: hidden;
-  border: 1px solid oklch(0 0 0 / .08);
-  background: #fff;
-  transition: box-shadow .2s, transform .2s;
+  min-height: 300px;
+}
+.nc-featured-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .8s var(--ease-out);
+}
+.nc-featured:hover .nc-featured-img img { transform: scale(1.05); }
+.nc-featured-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, oklch(0.19 0.013 250/.5) 0%, transparent 60%);
+  pointer-events: none;
+}
+.nc-featured-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 100px;
+}
+.nc-featured-body {
+  padding: var(--sp-l);
   display: flex;
   flex-direction: column;
+  gap: 14px;
+  justify-content: center;
 }
-.article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px oklch(0 0 0 / .10); }
-.ac-img { position: relative; aspect-ratio: 16/9; overflow: hidden; }
-.ac-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
-.article-card:hover .ac-img img { transform: scale(1.04); }
-.ac-img-placeholder { width: 100%; height: 100%; background: var(--bg); }
-.ac-cat { position: absolute; top: var(--sp-s); left: var(--sp-s); background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
-.ac-body { padding: var(--sp-m); flex: 1; display: flex; flex-direction: column; }
-.ac-date { font-size: 0.78rem; color: var(--text-muted); margin: 0 0 var(--sp-xs); }
-.ac-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); line-height: 1.4; }
-.ac-excerpt { font-size: 0.86rem; color: var(--text-muted); margin: 0 0 auto; padding-bottom: var(--sp-m); line-height: 1.6; }
-.ac-read { font-size: 0.82rem; font-weight: 600; color: var(--accent); }
-.no-results { text-align: center; color: var(--text-muted); padding: var(--sp-2xl) 0; }
+.nc-featured-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent-d);
+  display: inline-block;
+  background: oklch(0.62 0.16 141/.10);
+  padding: 4px 12px;
+  border-radius: 100px;
+  width: fit-content;
+}
+.nc-featured-title {
+  font-size: clamp(17px, 2.2vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.nc-featured-excerpt {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+.nc-featured-meta {
+  font-size: 12px;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nc-featured-meta::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nc-featured-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  width: fit-content;
+  margin-top: 4px;
+  transition: background var(--dur-fast), gap var(--dur-fast);
+}
+.nc-featured:hover .nc-featured-cta { background: var(--primary-d); gap: 12px; }
+
+.news-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.nc {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) * 2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--dur-mid), transform var(--dur-mid);
+}
+.nc:hover {
+  box-shadow: 0 10px 32px oklch(0.42 0.14 242/.11);
+  transform: translateY(-4px);
+}
+.nc-img {
+  position: relative;
+  height: 190px;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+.nc-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .7s var(--ease-out);
+}
+.nc:hover .nc-img img { transform: scale(1.07); }
+.nc-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, oklch(0.19 0.013 250/.35) 0%, transparent 55%);
+  pointer-events: none;
+}
+.nc-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nc-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.nc-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+  flex: 1;
+}
+.nc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.nc-meta { font-size: 11px; color: var(--ink-3); }
+.nc-read {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap var(--dur-fast);
+}
+.nc:hover .nc-read { gap: 8px; }
+
+.news-empty {
+  text-align: center;
+  padding: var(--sp-xl) 0;
+  color: var(--ink-3);
+}
+.news-empty svg { margin: 0 auto var(--sp-m); display: block; opacity: .3; }
+.news-empty p { font-size: 15px; }
 
 @media (max-width: 1024px) {
-  .articles-grid { grid-template-columns: repeat(2, 1fr); }
-  .article-card--featured { grid-template-columns: 1fr; }
+  .nc-featured { grid-template-columns: 1fr 1fr; min-height: 280px; }
+  .news-cards-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
-  .articles-grid { grid-template-columns: 1fr; }
-  .article-card--featured { grid-column: auto; }
+@media (max-width: 768px) {
+  .nc-featured { grid-template-columns: 1fr; }
+  .nc-featured-img { min-height: 220px; }
+  .nc-featured-body { padding: var(--sp-m); gap: 12px; }
+  .nc-featured-title { font-size: 18px; }
+  .news-cards-grid { grid-template-columns: 1fr; }
+  .news-filters { gap: 6px; }
+  .news-filter-btn { padding: 7px 14px; font-size: 10px; }
 }
 </style>
