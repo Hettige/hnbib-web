@@ -1,12 +1,18 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger on push to main
+  # Trigger on push to main branch (code changes)
   push:
     branches: [main]
-  # Trigger manually
+
+  # Scheduled rebuild every 2 hours — safety net so content is never stale
+  schedule:
+    - cron: '0 */2 * * *'
+
+  # Manual trigger from GitHub Actions UI
   workflow_dispatch:
-  # Trigger from Strapi webhook (content update)
+
+  # Triggered by Strapi webhook via Pipedream bridge (real-time content updates)
   repository_dispatch:
     types: [strapi-content-update]
 
