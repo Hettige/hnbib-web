@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getRates } from '../../lib/strapi';
+
+const base  = import.meta.env.BASE_URL;
+const rates = await getRates();
+const repoRate = rates.find(r => r.instrument === 'Repo');
+---
+
+<BaseLayout
+  title="Repurchase Agreements (Repos) — HNB Securities"
+  description="Flexible, short-term investments backed by sovereign government securities. Superior returns with same-day liquidity."
+>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow"><a href={`${base}hnb-securities/`} style="color:inherit;opacity:.7;text-decoration:none">HNB Securities</a> / Repurchase Agreements</div>
+  <h1 class="page-header-h1">Repurchase Agreements</h1>
+  <p class="page-header-lead">Flexible, short-term investments backed by sovereign government securities. Superior returns with same-day liquidity.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- S1: Rates -->
+<section class="section-host" data-section-id="s1-rates" data-section-label="Rates">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Rate Cards">
+    <div class="section-pad"><div class="section-inner">
+      <div class="reveal" style="margin-bottom:2rem;">
+        <h2 class="section-h2">Current Indicative Rates</h2>
+        <p style="opacity:.65;margin:.5rem 0 0;">Rates subject to daily market conditions. Contact our desk for live quotes.</p>
+      </div>
+      <div class="rate-monument reveal">
+        <div class="rate-mon-card highlight">
+          <div class="rate-num">{repoRate ? `${repoRate.rate.toFixed(2)}%` : '8.50%'}</div>
+          <div class="rate-label">Overnight</div>
+          <div style="font-size:.8rem;color:oklch(1 0 0/.6);margin-top:.5rem;">p.a.</div>
+        </div>
+        <div class="rate-mon-card">
+          <div class="rate-num" style="color:var(--primary);">9.10%</div>
+          <div class="rate-label">7-Day Repo</div>
+          <div style="font-size:.8rem;opacity:.5;margin-top:.5rem;">p.a.</div>
+        </div>
+        <div class="rate-mon-card">
+          <div class="rate-num" style="color:var(--primary);">9.25%</div>
+          <div class="rate-label">14-Day Repo</div>
+          <div style="font-size:.8rem;opacity:.5;margin-top:.5rem;">p.a.</div>
+        </div>
+        <div class="rate-mon-card">
+          <div class="rate-num" style="color:var(--primary);">9.40%</div>
+          <div class="rate-label">30-Day Repo</div>
+          <div style="font-size:.8rem;opacity:.5;margin-top:.5rem;">p.a.</div>
+        </div>
+      </div>
+      <p class="reveal" style="margin-top:1.5rem;font-size:.8rem;opacity:.5;">Indicative rates only. WHT at 10% applies to interest income. Minimum investment LKR 250,000.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- S2: How it Works -->
+<section class="section-host" data-section-id="s2-how" data-section-label="How It Works">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Step Cards">
+    <div class="section-pad" style="background:oklch(0.97 0.010 244)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">How It Works</div><h2 class="section-h2">How a Repo Works</h2></div>
+      <div class="how-grid reveal">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <h4>You Invest</h4>
+          <p>Transfer funds to HNB Securities. Minimum LKR 250,000, same-day processing.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <h4>We Sell Securities</h4>
+          <p>We sell you Government securities (T-Bills/T-Bonds) as collateral for your investment.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <h4>Interest Accrues</h4>
+          <p>Your agreed repo rate accrues daily over the selected tenor — overnight to 90 days.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">4</div>
+          <h4>Repurchase + Return</h4>
+          <p>At maturity, we repurchase the securities and return your principal plus net interest.</p>
+        </div>
+      </div>
+      <div class="reveal" style="margin-top:2.5rem;text-align:center;">
+        <a class="btn-primary" href={`${base}hnb-securities/repo/calculator/`}>Use the Repo Calculator →</a>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- S3: FAQ -->
+<section class="section-host" data-section-id="s3-faq" data-section-label="FAQ">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Accordion FAQ">
+    <div class="section-pad"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">FAQ</div><h2 class="section-h2">Frequently Asked Questions</h2></div>
+      <div class="faq-list reveal">
+        <details class="faq-item">
+          <summary>What is the minimum investment for a repo?</summary>
+          <p>The minimum investment for an overnight or 7-day repo is LKR 250,000. For 14-day and 30-day repos, the minimum is LKR 500,000. For 90-day repos, the minimum is LKR 1,000,000.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How is interest taxed?</summary>
+          <p>Withholding tax (WHT) at 10% is deducted at source on the gross interest earned. You will receive a WHT certificate for your tax records. No further income tax liability arises if you are an individual resident investor.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I redeem before maturity?</summary>
+          <p>Term repos (7-day and above) are generally held to maturity. Early redemption may be accommodated subject to a break-funding adjustment. Overnight repos mature and are credited the next business day.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What securities are used as collateral?</summary>
+          <p>HNB Securities uses Treasury Bills and Treasury Bonds issued by the Government of Sri Lanka as collateral. These are sovereign instruments with zero credit risk, auctioned by the Central Bank of Sri Lanka.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I invest — what accounts do I need?</summary>
+          <p>You need a HNB Securities client account (KYC/AML compliant) and a linked bank account for fund transfers. Contact our team at <a href="tel:+94112206220" style="color:var(--primary);">+94 112 206 220</a> or email <a href="mailto:securities@hnbib.lk" style="color:var(--primary);">securities@hnbib.lk</a> to open an account.</p>
+        </details>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<div class="cta-final"><div class="cta-final-inner">
+  <h2 class="cta-final-h2 reveal">Invest in Repos Today</h2>
+  <p class="cta-final-sub reveal">Competitive rates, sovereign security, flexible tenors. Contact our fixed income desk to get started.</p>
+  <div class="cta-final-btns reveal">
+    <a class="btn-white" href={`${base}hnb-securities/repo/calculator/`}>Calculate Returns</a>
+    <a class="btn-ghost-white" href={`${base}contact-us/`}>Contact Our Desk →</a>
+  </div>
+  <div class="cta-trust reveal"><span>CBSL Primary Dealer</span><span class="dot">·</span><span>Since 1992</span><span class="dot">·</span><span>SEC Licensed</span></div>
+</div></div>
+
+</main>
+
+</BaseLayout>
+
+<style>
+.rate-monument { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+.rate-mon-card { padding:2rem 1.5rem; border:1px solid oklch(0.88 0.015 244); border-radius:calc(var(--radius)*1.5); text-align:center; }
+.rate-mon-card.highlight { background:var(--primary); color:#fff; border-color:var(--primary); }
+.rate-num { font-size:2.4rem; font-weight:800; line-height:1; margin-bottom:.35rem; }
+.rate-mon-card.highlight .rate-num { color:var(--accent); }
+.rate-label { font-size:.75rem; text-transform:uppercase; letter-spacing:.07em; opacity:.6; }
+.rate-mon-card.highlight .rate-label { color:oklch(1 0 0/.65); }
+.how-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+.how-step { text-align:center; padding:1.5rem 1rem; }
+.how-num { width:44px; height:44px; border-radius:50%; background:var(--primary); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; margin:0 auto 1rem; }
+.how-step h4 { font-size:.95rem; font-weight:700; margin:0 0 .35rem; }
+.how-step p { font-size:.85rem; opacity:.65; margin:0; line-height:1.6; }
+.faq-list { max-width:720px; }
+.faq-item { border-bottom:1px solid oklch(0.88 0.015 244); padding:1.25rem 0; }
+.faq-item summary { font-weight:600; font-size:.95rem; cursor:pointer; list-style:none; display:flex; justify-content:space-between; }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-item summary::after { content:"＋"; color:var(--primary); }
+.faq-item[open] summary::after { content:"－"; }
+.faq-item p { font-size:.9rem; opacity:.75; line-height:1.7; margin:.75rem 0 0; }
+@media(max-width:768px) {
+  .rate-monument { grid-template-columns:repeat(2,1fr); }
+  .how-grid { grid-template-columns:repeat(2,1fr); }
+}
+</style>

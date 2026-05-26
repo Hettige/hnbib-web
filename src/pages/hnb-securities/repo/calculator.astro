@@ -1,0 +1,467 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Fixed Income Calculator — HNB Securities"
+  description="Calculate returns for Repos, Treasury Bills, and Treasury Bonds. Indicative results only."
+>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">
+    <a href={`${base}hnb-securities/`} style="color:inherit;opacity:.7;text-decoration:none">HNB Securities</a> /
+    <a href={`${base}hnb-securities/repo/`} style="color:inherit;opacity:.7;text-decoration:none">Repos</a> / Calculator
+  </div>
+  <h1 class="page-header-h1">Fixed Income Calculator</h1>
+  <p class="page-header-lead">Calculate returns for Repos, Treasury Bills, and Treasury Bonds. Indicative results only — not financial advice.</p>
+</div></div>
+
+<div class="calc-page">
+
+  <div class="calc-tabs">
+    <button class="calc-tab active" data-tab="repo">Repo</button>
+    <button class="calc-tab" data-tab="tbill">Treasury Bill</button>
+    <button class="calc-tab" data-tab="tbond">Treasury Bond</button>
+    <button class="calc-tab" data-tab="compare">Compare</button>
+  </div>
+
+  <!-- Repo Tab -->
+  <div class="calc-panel active" id="tab-repo">
+    <div class="calc-card">
+      <h3>Repurchase Agreement (Repo)</h3>
+      <div class="field-grid">
+        <div class="calc-field">
+          <label>Investment Amount (LKR)</label>
+          <input type="number" id="r-amount" value="1000000" min="250000" step="50000">
+          <div class="hint">Minimum: LKR 250,000</div>
+        </div>
+        <div class="calc-field">
+          <label>Tenor</label>
+          <select id="r-tenor">
+            <option value="1,8.50">Overnight (1D) — 8.50%</option>
+            <option value="7,9.10" selected>7-Day — 9.10%</option>
+            <option value="14,9.25">14-Day — 9.25%</option>
+            <option value="30,9.40">30-Day — 9.40%</option>
+            <option value="90,9.55">90-Day — 9.55%</option>
+            <option value="custom,custom">Custom rate…</option>
+          </select>
+        </div>
+        <div class="calc-field" id="r-custom-wrap" style="display:none;">
+          <label>Custom Rate (% p.a.)</label>
+          <input type="number" id="r-custom-rate" value="9.00" step="0.01" min="0" max="30">
+        </div>
+        <div class="calc-field" id="r-custom-days-wrap" style="display:none;">
+          <label>Custom Tenor (days)</label>
+          <input type="number" id="r-custom-days" value="30" min="1" max="365">
+        </div>
+        <div class="calc-field">
+          <label>Rollover Count</label>
+          <select id="r-rolls">
+            <option value="1">No rollover (1×)</option>
+            <option value="2">Rollover 2×</option>
+            <option value="4">Rollover 4×</option>
+            <option value="12">Rollover 12×</option>
+          </select>
+          <div class="hint">Compound effect over multiple rollovers</div>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel">
+      <h4>Results (after 10% WHT on interest)</h4>
+      <div class="results-grid">
+        <div class="result-item"><strong id="r-res-gross">LKR 1,747</strong><span>Gross Interest</span></div>
+        <div class="result-item"><strong id="r-res-wht">LKR 175</strong><span>WHT (10%)</span></div>
+        <div class="result-item"><strong id="r-res-net">LKR 1,572</strong><span>Net Interest</span></div>
+        <div class="result-item accent"><strong id="r-res-mat">LKR 1,001,572</strong><span>Maturity Value</span></div>
+      </div>
+      <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid oklch(1 0 0/.15);display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;" id="r-rollover-row">
+        <div class="result-item"><strong id="r-res-roll-gross">—</strong><span>Total Gross (rolled)</span></div>
+        <div class="result-item"><strong id="r-res-roll-net">—</strong><span>Total Net (rolled)</span></div>
+        <div class="result-item"><strong id="r-res-eff-rate">9.10%</strong><span>Effective Annual Rate</span></div>
+      </div>
+    </div>
+    <div class="calc-note"><strong>Disclaimer:</strong> Results are indicative only. Actual rates are subject to market conditions at the time of investment. WHT at 10% applies to gross interest earned. This tool does not constitute financial advice.</div>
+  </div>
+
+  <!-- T-Bill Tab -->
+  <div class="calc-panel" id="tab-tbill">
+    <div class="calc-card">
+      <h3>Treasury Bill</h3>
+      <div class="field-grid">
+        <div class="calc-field">
+          <label>Face Value (LKR)</label>
+          <input type="number" id="tb-fv" value="1000000" min="100000" step="50000">
+          <div class="hint">Minimum: LKR 100,000</div>
+        </div>
+        <div class="calc-field">
+          <label>Tenor / Rate</label>
+          <select id="tb-tenor">
+            <option value="91,8.96">91-Day — 8.96% p.a.</option>
+            <option value="182,9.42">182-Day — 9.42% p.a.</option>
+            <option value="364,9.84" selected>364-Day — 9.84% p.a.</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>Quantity</label>
+          <input type="number" id="tb-qty" value="1" min="1" step="1">
+          <div class="hint">No. of T-Bill units</div>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel">
+      <h4>Results (T-Bill discount basis, 10% WHT on discount)</h4>
+      <div class="results-grid">
+        <div class="result-item"><strong id="tb-res-disc">LKR 98,400</strong><span>Gross Discount</span></div>
+        <div class="result-item"><strong id="tb-res-wht">LKR 9,840</strong><span>WHT (10%)</span></div>
+        <div class="result-item"><strong id="tb-res-net">LKR 88,560</strong><span>Net Income</span></div>
+        <div class="result-item accent"><strong id="tb-res-price">LKR 901,440</strong><span>Purchase Price</span></div>
+      </div>
+    </div>
+    <div class="amort-table-wrap">
+      <table class="amort-table">
+        <thead><tr><th>Item</th><th>Amount (LKR)</th></tr></thead>
+        <tbody id="tb-breakdown">
+          <tr><td>Face Value</td><td id="tb-b-fv">1,000,000</td></tr>
+          <tr><td>Tenor</td><td id="tb-b-days">364 days</td></tr>
+          <tr><td>Rate (indicative)</td><td id="tb-b-rate">9.84%</td></tr>
+          <tr><td>Gross Discount</td><td id="tb-b-disc">98,400</td></tr>
+          <tr><td>WHT (10% on discount)</td><td id="tb-b-wht">9,840</td></tr>
+          <tr><td>Net Discount (you receive)</td><td id="tb-b-net">88,560</td></tr>
+          <tr><td><b>Purchase Price</b></td><td id="tb-b-price"><b>901,440</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="calc-note"><strong>Note:</strong> T-Bills are issued at a discount to face value. You pay the purchase price today and receive the full face value at maturity. WHT is deducted on the discount. Rates are set at bi-weekly CBSL auction.</p>
+  </div>
+
+  <!-- T-Bond Tab -->
+  <div class="calc-panel" id="tab-tbond">
+    <div class="calc-card">
+      <h3>Treasury Bond (Fixed Coupon)</h3>
+      <div class="field-grid">
+        <div class="calc-field">
+          <label>Face Value (LKR)</label>
+          <input type="number" id="bond-fv" value="1000000" min="1000000" step="500000">
+          <div class="hint">Minimum: LKR 1,000,000</div>
+        </div>
+        <div class="calc-field">
+          <label>Coupon Rate (% p.a.)</label>
+          <input type="number" id="bond-coupon" value="11.25" step="0.01" min="0" max="30">
+        </div>
+        <div class="calc-field">
+          <label>Tenor (years)</label>
+          <select id="bond-tenor">
+            <option value="2">2 Years</option>
+            <option value="5" selected>5 Years</option>
+            <option value="10">10 Years</option>
+            <option value="30">30 Years</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-grid-2">
+        <div class="calc-field">
+          <label>Coupon Frequency</label>
+          <select id="bond-freq">
+            <option value="2" selected>Semi-Annual (×2)</option>
+            <option value="4">Quarterly (×4)</option>
+            <option value="1">Annual (×1)</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>WHT on Coupon</label>
+          <select id="bond-wht">
+            <option value="0.10" selected>10% (resident individual)</option>
+            <option value="0.05">5% (resident company)</option>
+            <option value="0">Exempt</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel">
+      <h4>Bond Summary</h4>
+      <div class="results-grid">
+        <div class="result-item"><strong id="bond-res-coupon-pa">LKR 112,500</strong><span>Gross Coupon p.a.</span></div>
+        <div class="result-item"><strong id="bond-res-net-pa">LKR 101,250</strong><span>Net Coupon p.a.</span></div>
+        <div class="result-item"><strong id="bond-res-total-net">LKR 506,250</strong><span>Total Net Income</span></div>
+        <div class="result-item accent"><strong id="bond-res-total-ret">LKR 1,506,250</strong><span>Total Return (FV + income)</span></div>
+      </div>
+    </div>
+    <div class="amort-table-wrap">
+      <table class="amort-table">
+        <thead><tr><th>Period</th><th>Gross Coupon</th><th>WHT</th><th>Net Coupon</th><th>Balance</th></tr></thead>
+        <tbody id="bond-schedule"></tbody>
+      </table>
+    </div>
+    <p class="calc-note"><strong>Note:</strong> Coupon schedule is indicative. T-Bonds are issued at par at primary auction. WHT deducted at source on each coupon payment. Face value returned at maturity.</p>
+  </div>
+
+  <!-- Compare Tab -->
+  <div class="calc-panel" id="tab-compare">
+    <div class="calc-card">
+      <h3>Compare Instruments</h3>
+      <div class="field-grid-2">
+        <div class="calc-field">
+          <label>Investment Amount (LKR)</label>
+          <input type="number" id="cmp-amount" value="1000000" min="100000" step="50000">
+        </div>
+        <div class="calc-field">
+          <label>Reference Period</label>
+          <select id="cmp-period">
+            <option value="364">1 Year (364 days)</option>
+            <option value="182">6 Months (182 days)</option>
+            <option value="91">3 Months (91 days)</option>
+            <option value="30">1 Month (30 days)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="calc-card">
+      <h3>Net Returns Comparison (after WHT)</h3>
+      <div class="compare-bar-row" id="cmp-bars"></div>
+    </div>
+    <div class="amort-table-wrap">
+      <table class="amort-table">
+        <thead><tr><th>Instrument</th><th>Rate</th><th>Gross Return</th><th>WHT</th><th>Net Return</th><th>Maturity Value</th></tr></thead>
+        <tbody id="cmp-table"></tbody>
+      </table>
+    </div>
+    <p class="calc-note"><strong>Note:</strong> All rates indicative. FD rate assumed 8.50% p.a. for comparison. WHT 10% applied uniformly. Actual rates subject to market and auction outcomes.</p>
+  </div>
+
+</div>
+
+</BaseLayout>
+
+<style>
+.calc-page { max-width:900px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+.calc-tabs { display:flex; gap:0; border-bottom:2px solid oklch(0.88 0.015 244); margin-bottom:2.5rem; }
+.calc-tab { padding:.75rem 1.5rem; font-size:.9rem; font-weight:600; cursor:pointer; border-bottom:3px solid transparent; color:var(--ink); opacity:.55; background:none; border-top:none; border-left:none; border-right:none; font-family:inherit; transition:all .2s; margin-bottom:-2px; }
+.calc-tab.active { color:var(--primary); opacity:1; border-bottom-color:var(--primary); }
+.calc-tab:hover { opacity:.85; }
+.calc-panel { display:none; }
+.calc-panel.active { display:block; }
+.calc-card { background:#fff; border:1px solid oklch(0.88 0.015 244); border-radius:calc(var(--radius)*2); padding:2rem; margin-bottom:1.5rem; }
+.calc-card h3 { font-size:1.1rem; margin:0 0 1.5rem; color:var(--primary); }
+.field-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
+.field-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+.calc-field { display:flex; flex-direction:column; gap:.35rem; }
+.calc-field label { font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink); opacity:.5; }
+.calc-field input, .calc-field select { padding:.7rem 1rem; border:1px solid oklch(0.82 0.015 244); border-radius:var(--radius); font-family:inherit; font-size:.95rem; color:var(--ink); outline:none; transition:border-color .2s; }
+.calc-field input:focus, .calc-field select:focus { border-color:var(--primary); }
+.calc-field .hint { font-size:.72rem; opacity:.45; margin-top:.15rem; }
+.result-panel { background:var(--primary); color:#fff; border-radius:calc(var(--radius)*1.5); padding:1.75rem 2rem; margin-bottom:1rem; }
+.result-panel h4 { font-size:.8rem; text-transform:uppercase; letter-spacing:.07em; color:oklch(1 0 0/.65); margin:0 0 1.25rem; }
+.results-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+.result-item strong { display:block; font-size:1.5rem; font-weight:800; color:#fff; }
+.result-item.accent strong { color:var(--accent); font-size:1.8rem; }
+.result-item span { font-size:.72rem; color:oklch(1 0 0/.6); text-transform:uppercase; letter-spacing:.05em; }
+.amort-table-wrap { max-height:320px; overflow-y:auto; border-radius:var(--radius); border:1px solid oklch(0.88 0.015 244); }
+.amort-table { width:100%; border-collapse:collapse; }
+.amort-table thead th { position:sticky; top:0; background:oklch(0.95 0.02 242); padding:.6rem 1rem; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; text-align:right; color:var(--primary); border-bottom:1px solid oklch(0.88 0.015 244); }
+.amort-table thead th:first-child { text-align:left; }
+.amort-table tbody td { padding:.55rem 1rem; font-size:.85rem; text-align:right; border-bottom:1px solid oklch(0.93 0.008 244); }
+.amort-table tbody td:first-child { text-align:left; font-weight:600; }
+.amort-table tbody tr:last-child td { border-bottom:none; font-weight:700; background:oklch(0.97 0.015 242); }
+.calc-note { font-size:.78rem; opacity:.5; line-height:1.6; padding:1rem 1.25rem; background:oklch(0.97 0.008 244); border-radius:var(--radius); margin-top:1rem; }
+.calc-note strong { opacity:.75; }
+.compare-bar-row { display:flex; flex-direction:column; gap:.75rem; }
+.compare-bar-item { display:grid; grid-template-columns:140px 1fr 80px; gap:.75rem; align-items:center; font-size:.9rem; }
+.bar-track { background:oklch(0.90 0.015 244); border-radius:20px; height:10px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:20px; background:var(--primary); transition:width .5s ease; }
+.bar-fill.accent { background:var(--accent); }
+.bar-rate { font-weight:700; color:var(--primary); }
+@media(max-width:768px) {
+  .field-grid { grid-template-columns:1fr 1fr; }
+  .field-grid-2 { grid-template-columns:1fr; }
+  .results-grid { grid-template-columns:1fr 1fr; }
+  .compare-bar-item { grid-template-columns:100px 1fr 60px; }
+}
+@media(max-width:480px) {
+  .field-grid { grid-template-columns:1fr; }
+  .calc-tabs { overflow-x:auto; }
+}
+</style>
+
+<script>
+(function(){
+  // Tab switching
+  document.querySelectorAll('.calc-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.calc-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.calc-panel').forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  function lkr(n){ return 'LKR ' + Math.round(n).toLocaleString('en-LK'); }
+  function pct(n){ return n.toFixed(2) + '%'; }
+
+  // Repo calculator
+  function calcRepo(){
+    var amt = parseFloat(document.getElementById('r-amount').value) || 1000000;
+    var tenorSel = document.getElementById('r-tenor').value;
+    var rolls = parseInt(document.getElementById('r-rolls').value) || 1;
+    var isCustom = tenorSel === 'custom,custom';
+    document.getElementById('r-custom-wrap').style.display = isCustom ? '' : 'none';
+    document.getElementById('r-custom-days-wrap').style.display = isCustom ? '' : 'none';
+    var days, rate;
+    if(isCustom){
+      days = parseFloat(document.getElementById('r-custom-days').value) || 30;
+      rate = parseFloat(document.getElementById('r-custom-rate').value) || 9.0;
+    } else {
+      var parts = tenorSel.split(',');
+      days = parseFloat(parts[0]);
+      rate = parseFloat(parts[1]);
+    }
+    var gross = amt * (rate/100) * (days/365);
+    var wht = gross * 0.1;
+    var net = gross - wht;
+    var mat = amt + net;
+    document.getElementById('r-res-gross').textContent = lkr(gross);
+    document.getElementById('r-res-wht').textContent = lkr(wht);
+    document.getElementById('r-res-net').textContent = lkr(net);
+    document.getElementById('r-res-mat').textContent = lkr(mat);
+    var rollRow = document.getElementById('r-rollover-row');
+    if(rolls > 1){
+      rollRow.style.display = '';
+      var totalGross = 0, principal = amt;
+      for(var i = 0; i < rolls; i++){
+        var rg = principal * (rate/100) * (days/365);
+        var rn = rg * 0.9;
+        totalGross += rg;
+        principal += rn;
+      }
+      var totalNet = totalGross * 0.9;
+      var effRate = ((principal - amt)/amt) * (365/(days*rolls)) * 100;
+      document.getElementById('r-res-roll-gross').textContent = lkr(totalGross);
+      document.getElementById('r-res-roll-net').textContent = lkr(totalNet);
+      document.getElementById('r-res-eff-rate').textContent = pct(effRate);
+    } else {
+      rollRow.style.display = 'none';
+    }
+  }
+  ['r-amount','r-tenor','r-rolls','r-custom-rate','r-custom-days'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.addEventListener('input', calcRepo); el.addEventListener('change', calcRepo); }
+  });
+  calcRepo();
+
+  // T-Bill calculator
+  function calcTBill(){
+    var fv = parseFloat(document.getElementById('tb-fv').value) || 1000000;
+    var qty = parseFloat(document.getElementById('tb-qty').value) || 1;
+    var parts = (document.getElementById('tb-tenor').value || '364,9.84').split(',');
+    var days = parseFloat(parts[0]), rate = parseFloat(parts[1]);
+    var totalFV = fv * qty;
+    var disc = totalFV * (rate/100) * (days/365);
+    var wht = disc * 0.1;
+    var netDisc = disc - wht;
+    var price = totalFV - netDisc;
+    document.getElementById('tb-res-disc').textContent = lkr(disc);
+    document.getElementById('tb-res-wht').textContent = lkr(wht);
+    document.getElementById('tb-res-net').textContent = lkr(netDisc);
+    document.getElementById('tb-res-price').textContent = lkr(price);
+    document.getElementById('tb-b-fv').textContent = lkr(totalFV);
+    document.getElementById('tb-b-days').textContent = days + ' days';
+    document.getElementById('tb-b-rate').textContent = rate + '%';
+    document.getElementById('tb-b-disc').textContent = lkr(disc);
+    document.getElementById('tb-b-wht').textContent = lkr(wht);
+    document.getElementById('tb-b-net').textContent = lkr(netDisc);
+    document.getElementById('tb-b-price').innerHTML = '<b>' + lkr(price) + '</b>';
+  }
+  ['tb-fv','tb-tenor','tb-qty'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.addEventListener('input', calcTBill); el.addEventListener('change', calcTBill); }
+  });
+  calcTBill();
+
+  // T-Bond calculator
+  function calcBond(){
+    var fv = parseFloat(document.getElementById('bond-fv').value) || 1000000;
+    var coupon = parseFloat(document.getElementById('bond-coupon').value) || 11.25;
+    var years = parseInt(document.getElementById('bond-tenor').value) || 5;
+    var freq = parseInt(document.getElementById('bond-freq').value) || 2;
+    var whtRate = parseFloat(document.getElementById('bond-wht').value) || 0.10;
+    var couponPerPeriod = fv * (coupon/100) / freq;
+    var whtPerPeriod = couponPerPeriod * whtRate;
+    var netPerPeriod = couponPerPeriod - whtPerPeriod;
+    var totalPeriods = years * freq;
+    var totalGross = couponPerPeriod * totalPeriods;
+    var totalNet = netPerPeriod * totalPeriods;
+    document.getElementById('bond-res-coupon-pa').textContent = lkr(couponPerPeriod * freq);
+    document.getElementById('bond-res-net-pa').textContent = lkr(netPerPeriod * freq);
+    document.getElementById('bond-res-total-net').textContent = lkr(totalNet);
+    document.getElementById('bond-res-total-ret').textContent = lkr(fv + totalNet);
+    var tbody = document.getElementById('bond-schedule');
+    tbody.innerHTML = '';
+    var cumGross = 0;
+    for(var i = 1; i <= totalPeriods; i++){
+      cumGross += couponPerPeriod;
+      var isLast = i === totalPeriods;
+      var tr = document.createElement('tr');
+      var periodLabel = (freq===2)?('H'+i):(freq===4)?('Q'+i):('Y'+i);
+      tr.innerHTML = '<td>' + periodLabel + '</td><td>' + Math.round(couponPerPeriod).toLocaleString() + '</td><td>' + Math.round(whtPerPeriod).toLocaleString() + '</td><td>' + Math.round(netPerPeriod).toLocaleString() + '</td><td>' + (isLast ? Math.round(fv).toLocaleString() + ' (FV)' : '—') + '</td>';
+      tbody.appendChild(tr);
+    }
+    var totRow = document.createElement('tr');
+    totRow.style.fontWeight = '700';
+    totRow.innerHTML = '<td>Total</td><td>' + Math.round(totalGross).toLocaleString() + '</td><td>' + Math.round(totalGross*whtRate).toLocaleString() + '</td><td>' + Math.round(totalNet).toLocaleString() + '</td><td>' + Math.round(fv+totalNet).toLocaleString() + '</td>';
+    tbody.appendChild(totRow);
+  }
+  ['bond-fv','bond-coupon','bond-tenor','bond-freq','bond-wht'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.addEventListener('input', calcBond); el.addEventListener('change', calcBond); }
+  });
+  calcBond();
+
+  // Compare calculator
+  function calcCompare(){
+    var amt = parseFloat(document.getElementById('cmp-amount').value) || 1000000;
+    var days = parseFloat(document.getElementById('cmp-period').value) || 364;
+    var instruments = [
+      { name:'Savings Account', rate:5.00 },
+      { name:'Fixed Deposit (Bank)', rate:8.50 },
+      { name:'Repo (Overnight)', rate:8.50 },
+      { name:'Repo 7-Day', rate:9.10 },
+      { name:'T-Bill 91D', rate:8.96 },
+      { name:'T-Bill 182D', rate:9.42 },
+      { name:'T-Bill 364D', rate:9.84 },
+      { name:'T-Bond 5Y (coupon)', rate:11.25 },
+    ];
+    var maxNet = 0;
+    var results = instruments.map(function(ins){
+      var gross = amt * (ins.rate/100) * (days/365);
+      var wht = gross * 0.1;
+      var net = gross - wht;
+      if(net > maxNet) maxNet = net;
+      return { name:ins.name, rate:ins.rate, gross:gross, wht:wht, net:net, mat:amt+net };
+    });
+    var barsEl = document.getElementById('cmp-bars');
+    barsEl.innerHTML = '';
+    results.forEach(function(r){
+      var p = maxNet > 0 ? (r.net/maxNet)*100 : 0;
+      var isHnb = r.name.indexOf('Repo') >= 0 || r.name.indexOf('T-Bill') >= 0 || r.name.indexOf('T-Bond') >= 0;
+      var div = document.createElement('div');
+      div.className = 'compare-bar-item';
+      div.innerHTML = '<div style="font-size:.82rem;opacity:.75;">' + r.name + '</div><div class="bar-track"><div class="bar-fill' + (isHnb ? ' accent' : '') + '" style="width:' + p + '%"></div></div><div class="bar-rate">' + r.rate.toFixed(2) + '%</div>';
+      barsEl.appendChild(div);
+    });
+    var tbody = document.getElementById('cmp-table');
+    tbody.innerHTML = '';
+    results.forEach(function(r){
+      var isHnb = r.name.indexOf('Repo') >= 0 || r.name.indexOf('T-Bill') >= 0 || r.name.indexOf('T-Bond') >= 0;
+      var tr = document.createElement('tr');
+      if(isHnb){ tr.style.background = 'oklch(0.97 0.02 242)'; tr.style.color = 'var(--primary)'; tr.style.fontWeight = '600'; }
+      tr.innerHTML = '<td>' + r.name + '</td><td>' + r.rate.toFixed(2) + '%</td><td>' + lkr(r.gross) + '</td><td>' + lkr(r.wht) + '</td><td>' + lkr(r.net) + '</td><td>' + lkr(r.mat) + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+  ['cmp-amount','cmp-period'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el){ el.addEventListener('input', calcCompare); el.addEventListener('change', calcCompare); }
+  });
+  calcCompare();
+})();
+</script>

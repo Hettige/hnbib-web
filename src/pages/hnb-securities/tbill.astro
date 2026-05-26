@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getRates } from '../../lib/strapi';
+
+const base  = import.meta.env.BASE_URL;
+const rates = await getRates();
+const tbillRates = rates.filter(r => r.instrument === 'T-Bill').sort((a,b) => a.tenor.localeCompare(b.tenor));
+const tbill91  = tbillRates.find(r => r.tenor.includes('91'))  ?? null;
+const tbill182 = tbillRates.find(r => r.tenor.includes('182')) ?? null;
+const tbill364 = tbillRates.find(r => r.tenor.includes('364')) ?? null;
+---
+
+<BaseLayout
+  title="Treasury Bills — HNB Securities"
+  description="Short-term government discount securities auctioned by the Central Bank. Zero credit risk, superior returns."
+>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow"><a href={`${base}hnb-securities/`} style="color:inherit;opacity:.7;text-decoration:none">HNB Securities</a> / Treasury Bills</div>
+  <h1 class="page-header-h1">Treasury Bills</h1>
+  <p class="page-header-lead">Short-term government discount securities auctioned by the Central Bank. Zero credit risk, superior returns.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- S1: Rates -->
+<section class="section-host" data-section-id="s1-rates" data-section-label="Rates">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Rate Monuments">
+    <div class="section-pad"><div class="section-inner">
+      <div class="reveal" style="margin-bottom:2rem;">
+        <h2 class="section-h2">Current Indicative Yields</h2>
+        <p style="opacity:.65;margin:.5rem 0 0;">Based on latest CBSL primary auction results. Rates change at each bi-weekly auction.</p>
+      </div>
+      <div class="rate-row reveal">
+        <div class="rate-card">
+          <div class="big-rate" style="color:var(--primary);">{tbill91 ? `${tbill91.rate.toFixed(2)}%` : '8.96%'}</div>
+          <div class="rate-tenor">91-Day T-Bill</div>
+          <div class="rate-min" style="opacity:.55;">Min: LKR 100,000</div>
+        </div>
+        <div class="rate-card">
+          <div class="big-rate" style="color:var(--primary);">{tbill182 ? `${tbill182.rate.toFixed(2)}%` : '9.42%'}</div>
+          <div class="rate-tenor">182-Day T-Bill</div>
+          <div class="rate-min" style="opacity:.55;">Min: LKR 100,000</div>
+        </div>
+        <div class="rate-card primary-bg">
+          <div class="big-rate">{tbill364 ? `${tbill364.rate.toFixed(2)}%` : '9.84%'}</div>
+          <div class="rate-tenor">364-Day T-Bill</div>
+          <div class="rate-min">Min: LKR 100,000</div>
+        </div>
+      </div>
+      <p class="reveal" style="margin-top:1.25rem;font-size:.8rem;opacity:.5;">Indicative rates only. WHT at 10% applies. Actual rates set at bi-weekly CBSL auction.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- S2: How to Invest -->
+<section class="section-host" data-section-id="s2-howto" data-section-label="How to Invest">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Process Steps">
+    <div class="section-pad" style="background:oklch(0.97 0.010 244)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">How to Invest</div><h2 class="section-h2">How to Invest in T-Bills</h2></div>
+      <div class="process-strip reveal">
+        <div class="process-step-item">
+          <div class="ps-num">1</div>
+          <div class="ps-title">Open Account</div>
+          <div class="ps-desc">Complete KYC with HNB Securities. Individual or corporate accounts accepted.</div>
+        </div>
+        <div class="process-step-item">
+          <div class="ps-num">2</div>
+          <div class="ps-title">Place Order</div>
+          <div class="ps-desc">Instruct your relationship manager with amount and tenor. Minimum LKR 100,000.</div>
+        </div>
+        <div class="process-step-item">
+          <div class="ps-num">3</div>
+          <div class="ps-title">CBSL Auction</div>
+          <div class="ps-desc">We bid at the bi-weekly primary auction on your behalf at competitive rates.</div>
+        </div>
+        <div class="process-step-item">
+          <div class="ps-num">4</div>
+          <div class="ps-title">Allotment</div>
+          <div class="ps-desc">T-Bills allotted to your CDS account. Discount settled to your linked bank account.</div>
+        </div>
+        <div class="process-step-item">
+          <div class="ps-num">5</div>
+          <div class="ps-title">Maturity</div>
+          <div class="ps-desc">Face value paid at maturity (91/182/364 days). Net of 10% WHT on the discount.</div>
+        </div>
+      </div>
+
+      <!-- Inline return calculator -->
+      <div class="reveal" style="margin-top:2rem;">
+        <div class="tbill-calc">
+          <h3>Estimate Your Return</h3>
+          <div class="tc-row">
+            <div class="tc-field"><label>Face Value (LKR)</label><input type="number" id="tc-fv" value="1000000" min="100000"></div>
+            <div class="tc-field">
+              <label>Tenor</label>
+              <select id="tc-tenor">
+                <option value={`91,${tbill91 ? tbill91.rate : 8.96}`}>{`91-Day — ${tbill91 ? tbill91.rate.toFixed(2) : '8.96'}%`}</option>
+                <option value={`182,${tbill182 ? tbill182.rate : 9.42}`}>{`182-Day — ${tbill182 ? tbill182.rate.toFixed(2) : '9.42'}%`}</option>
+                <option value={`364,${tbill364 ? tbill364.rate : 9.84}`} selected>{`364-Day — ${tbill364 ? tbill364.rate.toFixed(2) : '9.84'}%`}</option>
+              </select>
+            </div>
+          </div>
+          <div class="tc-result">
+            <div class="tc-res-item"><strong id="tc-discount">LKR 98,400</strong><span>Gross Discount</span></div>
+            <div class="tc-res-item"><strong id="tc-net">LKR 88,560</strong><span>Net (after WHT)</span></div>
+            <div class="tc-res-item"><strong id="tc-purchase">LKR 901,440</strong><span>Purchase Price</span></div>
+          </div>
+          <p class="tc-note">WHT 10% on discount income. Indicative rates. Not financial advice. Actual rates set at auction.</p>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<div class="cta-final"><div class="cta-final-inner">
+  <h2 class="cta-final-h2 reveal">Invest in Treasury Bills</h2>
+  <p class="cta-final-sub reveal">Next CBSL auction: every second Wednesday. Contact our desk to place your order before cut-off.</p>
+  <div class="cta-final-btns reveal">
+    <a class="btn-white" href={`${base}contact-us/`}>Contact Our Desk</a>
+    <a class="btn-ghost-white" href={`${base}hnb-securities/repo/`}>View Repos →</a>
+  </div>
+  <div class="cta-trust reveal"><span>CBSL Primary Dealer</span><span class="dot">·</span><span>Since 1992</span><span class="dot">·</span><span>SEC Licensed</span></div>
+</div></div>
+
+</main>
+
+</BaseLayout>
+
+<style>
+.rate-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.rate-card { padding:2rem; border-radius:calc(var(--radius)*1.5); border:1px solid oklch(0.88 0.015 244); text-align:center; }
+.rate-card.primary-bg { background:var(--primary); color:#fff; border-color:var(--primary); }
+.big-rate { font-size:2.6rem; font-weight:800; line-height:1; }
+.primary-bg .big-rate { color:var(--accent); }
+.rate-tenor { font-size:.8rem; text-transform:uppercase; letter-spacing:.07em; opacity:.6; margin:.4rem 0 .25rem; }
+.primary-bg .rate-tenor { color:oklch(1 0 0/.6); }
+.rate-min { font-size:.8rem; }
+.primary-bg .rate-min { color:oklch(1 0 0/.55); }
+.process-strip { display:flex; gap:0; overflow:hidden; border-radius:calc(var(--radius)*1.5); border:1px solid oklch(0.88 0.015 244); }
+.process-step-item { flex:1; padding:1.5rem; border-right:1px solid oklch(0.88 0.015 244); text-align:center; }
+.process-step-item:last-child { border-right:none; }
+.ps-num { width:36px; height:36px; border-radius:50%; background:var(--primary); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:.9rem; margin:0 auto .75rem; }
+.ps-title { font-size:.9rem; font-weight:700; margin:0 0 .35rem; }
+.ps-desc { font-size:.8rem; opacity:.6; margin:0; line-height:1.5; }
+.tbill-calc { max-width:640px; background:#fff; border-radius:calc(var(--radius)*2); padding:2.5rem; box-shadow:0 4px 24px oklch(0 0 0/.06); }
+.tbill-calc h3 { margin:0 0 1.5rem; font-size:1.2rem; }
+.tc-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+.tc-field label { font-size:.75rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.55; display:block; margin-bottom:.35rem; }
+.tc-field input, .tc-field select { width:100%; padding:.7rem 1rem; border:1px solid oklch(0.82 0.015 244); border-radius:var(--radius); font-family:inherit; font-size:.9rem; outline:none; transition:border-color .2s; }
+.tc-field input:focus, .tc-field select:focus { border-color:var(--primary); }
+.tc-result { background:oklch(0.97 0.02 242); border-radius:var(--radius); padding:1.25rem 1.5rem; display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; text-align:center; }
+.tc-res-item strong { display:block; font-size:1.3rem; font-weight:800; color:var(--primary); }
+.tc-res-item span { font-size:.72rem; opacity:.6; text-transform:uppercase; letter-spacing:.05em; }
+.tc-note { font-size:.75rem; opacity:.5; margin-top:.75rem; }
+@media(max-width:768px) {
+  .rate-row { grid-template-columns:1fr; }
+  .tc-row { grid-template-columns:1fr; }
+  .tc-result { grid-template-columns:1fr 1fr; }
+  .process-strip { flex-direction:column; }
+  .process-step-item { border-right:none; border-bottom:1px solid oklch(0.88 0.015 244); }
+}
+</style>
+
+<script>
+(function(){
+  function tbCalc(){
+    var fv = parseFloat(document.getElementById('tc-fv').value) || 1000000;
+    var tv = (document.getElementById('tc-tenor').value || '364,9.84').split(',');
+    var days = parseFloat(tv[0]), rate = parseFloat(tv[1]);
+    var disc = fv * (rate/100) * (days/365);
+    var net  = disc * 0.9;
+    var pur  = fv - net;
+    function fmt(n){ return 'LKR ' + Math.round(n).toLocaleString('en-LK'); }
+    var di = document.getElementById('tc-discount');
+    var ni = document.getElementById('tc-net');
+    var pi = document.getElementById('tc-purchase');
+    if(di){ di.textContent = fmt(disc); ni.textContent = fmt(net); pi.textContent = fmt(pur); }
+  }
+  var fv = document.getElementById('tc-fv');
+  var tn = document.getElementById('tc-tenor');
+  if(fv){ fv.addEventListener('input', tbCalc); tn.addEventListener('change', tbCalc); tbCalc(); }
+})();
+</script>

@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Careers — HNB Investment Bank"
+  description="Build your career at the centre of Sri Lanka's capital markets. Join HNB Investment Bank."
+>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">Careers at HNB Investment Bank</div>
+  <h1 class="page-header-h1">Build your career at the centre of Sri Lanka's capital markets.</h1>
+  <p class="page-header-lead">Join a team that executes IPOs, manages sovereign debt, and advises Sri Lanka's largest corporations — all under one roof.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- S1: Why join us -->
+<section class="section-host" data-section-id="s1-culture" data-section-label="Culture">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">Why HNB Investment Bank</div><h2 class="section-h2">Where ambition meets opportunity.</h2></div>
+      <div class="grid-3">
+        <div class="card card-p reveal">
+          <div style="font-size:28px;font-weight:800;color:var(--primary);margin-bottom:10px">01</div>
+          <div style="font-weight:700;color:var(--ink);margin-bottom:6px">Full Exposure</div>
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.55">Work across stockbroking, primary dealership, corporate finance, and fund management — breadth that few institutions in Sri Lanka can offer.</div>
+        </div>
+        <div class="card card-p reveal">
+          <div style="font-size:28px;font-weight:800;color:var(--primary);margin-bottom:10px">02</div>
+          <div style="font-weight:700;color:var(--ink);margin-bottom:6px">Institutional Backing</div>
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.55">The stability and resources of Hatton National Bank PLC, Sri Lanka's second-largest listed bank, behind every role.</div>
+        </div>
+        <div class="card card-p reveal">
+          <div style="font-size:28px;font-weight:800;color:var(--primary);margin-bottom:10px">03</div>
+          <div style="font-weight:700;color:var(--ink);margin-bottom:6px">Real Deals</div>
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.55">From day one, you work on live transactions — not simulations. IPOs, debentures, Repo auctions, and fund management decisions.</div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- S2: Open roles -->
+<section class="section-host" data-section-id="s2-roles" data-section-label="Open Roles">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">Open Positions</div><h2 class="section-h2">Current opportunities.</h2></div>
+      <div class="grid-3">
+        <div class="role-card reveal">
+          <div class="role-dept">Research</div>
+          <div class="role-title">Analyst — Research</div>
+          <div class="role-type">Full Time</div>
+          <div class="role-desc">Support the Research team in producing equity and sector analysis, building financial models, and contributing to published investment recommendations.</div>
+          <a href={`${base}contact-us/`} class="btn-primary" style="align-self:flex-start">Apply now →</a>
+        </div>
+        <div class="role-card reveal">
+          <div class="role-dept">Treasury</div>
+          <div class="role-title">Senior Executive — Treasury Sales</div>
+          <div class="role-type">Full Time</div>
+          <div class="role-desc">Manage relationships with institutional clients for Repo, T-Bill, and T-Bond transactions. Requires strong knowledge of fixed income markets and client servicing.</div>
+          <a href={`${base}contact-us/`} class="btn-primary" style="align-self:flex-start">Apply now →</a>
+        </div>
+        <div class="role-card reveal">
+          <div class="role-dept">Stockbroking</div>
+          <div class="role-title">Trainee Investment Advisors</div>
+          <div class="role-type">Trainee Programme</div>
+          <div class="role-desc">A structured programme for graduates looking to enter the capital markets industry. You will rotate across stockbroking, research, and client advisory under mentorship.</div>
+          <a href={`${base}contact-us/`} class="btn-primary" style="align-self:flex-start">Apply now →</a>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<div class="cta-final"><div class="cta-final-inner">
+  <h2 class="cta-final-h2 reveal">Don't see the right role?</h2>
+  <p class="cta-final-sub reveal">Send us your CV and we'll keep you in mind for future openings across our businesses.</p>
+  <div class="cta-final-btns reveal">
+    <a href="mailto:careers@hnbib.lk" class="btn-white">Send Your CV</a>
+    <a href={`${base}about-us/`} class="btn-ghost-white">About HNBIB →</a>
+  </div>
+</div></div>
+
+</main>
+
+</BaseLayout>
+
+<style>
+.role-card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:var(--sp-m); display:flex; flex-direction:column; gap:12px; }
+.role-dept { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--primary); }
+.role-title { font-size:20px; font-weight:800; color:var(--ink); }
+.role-type { font-size:12px; font-weight:600; background:var(--bg-2); color:var(--ink-2); padding:3px 10px; border-radius:3px; display:inline-block; }
+.role-desc { font-size:13px; color:var(--ink-2); line-height:1.55; flex:1; }
+</style>

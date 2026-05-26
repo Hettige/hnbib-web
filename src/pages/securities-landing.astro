@@ -1,0 +1,241 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<LandingLayout
+  title="Invest in Government Securities — HNB Securities"
+  description="Treasury Bills, Treasury Bonds, and Repos through Sri Lanka's licensed primary dealer backed by HNB Bank."
+>
+
+<style>
+.lp-hero { background:var(--ink); color:#fff; padding:80px 24px 100px; text-align:center; position:relative; overflow:hidden; }
+.lp-hero::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 30% 50%, oklch(0.42 0.14 242 / .5), transparent); }
+.lp-logo { display:inline-block; font-size:1.1rem; font-weight:800; letter-spacing:.04em; color:#fff; margin-bottom:48px; position:relative; z-index:1; }
+.lp-logo span { color:var(--accent); }
+.lp-hero h1 { font-size:clamp(2rem,5vw,3.2rem); font-weight:800; line-height:1.15; margin:0 auto .75rem; max-width:720px; position:relative; z-index:1; }
+.lp-hero p { font-size:1.1rem; color:oklch(1 0 0/.75); max-width:520px; margin:0 auto 2rem; position:relative; z-index:1; }
+.lp-hero-cta { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+.lp-rates-strip { display:flex; gap:0; flex-wrap:wrap; background:oklch(1 0 0/.05); border-radius:var(--radius); margin-top:3rem; overflow:hidden; position:relative; z-index:1; max-width:700px; margin-left:auto; margin-right:auto; }
+.rate-pill { flex:1; min-width:160px; padding:1rem 1.5rem; text-align:center; border-right:1px solid oklch(1 0 0/.1); }
+.rate-pill:last-child { border-right:none; }
+.rate-pill strong { display:block; font-size:1.6rem; font-weight:800; color:var(--accent); }
+.rate-pill span { font-size:.75rem; color:oklch(1 0 0/.55); text-transform:uppercase; letter-spacing:.07em; }
+.rate-pill em { display:block; font-size:.7rem; color:oklch(1 0 0/.4); font-style:normal; margin-top:.15rem; }
+.lp-products { padding:72px 24px; background:#fff; }
+.lp-products-inner { max-width:960px; margin:0 auto; }
+.lp-products h2 { font-size:1.9rem; text-align:center; margin:0 0 .5rem; }
+.lp-products-sub { text-align:center; opacity:.6; margin:0 0 3rem; }
+.product-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.product-card { border:2px solid oklch(0.88 0.015 244); border-radius:calc(var(--radius)*2); padding:2rem; }
+.product-card.featured { border-color:var(--primary); background:oklch(0.97 0.02 242); }
+.product-badge { display:inline-block; background:var(--accent); color:#fff; font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:.25rem .6rem; border-radius:20px; margin-bottom:1rem; }
+.product-card h3 { font-size:1.2rem; font-weight:800; margin:0 0 .5rem; color:var(--primary); }
+.product-rate { font-size:2rem; font-weight:800; color:var(--ink); margin:.75rem 0; }
+.product-rate span { font-size:.9rem; font-weight:400; opacity:.6; }
+.product-card p { font-size:.88rem; opacity:.65; margin:0 0 1.25rem; line-height:1.65; }
+.product-card ul { list-style:none; padding:0; margin:0 0 1.5rem; }
+.product-card ul li { font-size:.85rem; opacity:.7; padding:.35rem 0; border-top:1px solid oklch(0.90 0.012 244); display:flex; gap:.5rem; }
+.product-card ul li::before { content:"✓"; color:var(--accent); font-weight:700; flex-shrink:0; }
+.lp-calc { padding:72px 24px; background:oklch(0.97 0.010 244); }
+.lp-calc-inner { max-width:700px; margin:0 auto; background:#fff; border-radius:calc(var(--radius)*2); padding:2.5rem; box-shadow:0 8px 40px oklch(0 0 0/.08); }
+.lp-calc h2 { font-size:1.5rem; margin:0 0 .25rem; }
+.lp-calc-sub { font-size:.9rem; opacity:.6; margin:0 0 2rem; }
+.calc-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+.calc-field label { font-size:.75rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.55; display:block; margin-bottom:.35rem; }
+.calc-field input, .calc-field select { width:100%; padding:.75rem 1rem; border:1px solid oklch(0.82 0.015 244); border-radius:var(--radius); font-family:inherit; font-size:.95rem; outline:none; transition:border-color .2s; }
+.calc-field input:focus, .calc-field select:focus { border-color:var(--primary); }
+.calc-result { background:oklch(0.97 0.02 242); border-radius:var(--radius); padding:1.5rem; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; text-align:center; margin-bottom:1.5rem; }
+.calc-result-item strong { display:block; font-size:1.4rem; font-weight:800; color:var(--primary); }
+.calc-result-item span { font-size:.75rem; opacity:.6; text-transform:uppercase; letter-spacing:.06em; }
+.calc-note { font-size:.75rem; opacity:.5; text-align:center; }
+.lp-form-section { padding:72px 24px; background:var(--primary); }
+.lp-form-wrap { max-width:520px; margin:0 auto; background:#fff; border-radius:calc(var(--radius)*2); padding:2.5rem; box-shadow:0 8px 40px oklch(0 0 0/.15); }
+.lp-form-wrap h2 { font-size:1.5rem; margin:0 0 .5rem; }
+.lp-form-wrap p { font-size:.9rem; opacity:.65; margin:0 0 1.5rem; }
+.lp-form { display:flex; flex-direction:column; gap:1rem; }
+.lp-form label { font-size:.75rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.55; display:block; margin-bottom:.25rem; }
+.lp-form input, .lp-form select { width:100%; padding:.75rem 1rem; border:1px solid oklch(0.82 0.015 244); border-radius:var(--radius); font-family:inherit; font-size:.95rem; outline:none; transition:border-color .2s; }
+.lp-form input:focus, .lp-form select:focus { border-color:var(--primary); }
+.form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.lp-submit { background:var(--primary); color:#fff; border:none; padding:1rem; border-radius:var(--radius); font-family:inherit; font-weight:700; font-size:1rem; cursor:pointer; transition:opacity .2s; }
+.lp-submit:hover { opacity:.85; }
+.lp-form-note { font-size:.75rem; opacity:.5; text-align:center; }
+.lp-footer { padding:32px 24px; background:var(--ink); color:oklch(1 0 0/.6); text-align:center; font-size:.8rem; }
+.lp-footer a { color:oklch(1 0 0/.5); text-decoration:none; margin:0 .75rem; }
+.lp-footer a:hover { color:#fff; }
+@media(max-width:768px){
+  .product-cards { grid-template-columns:1fr; }
+  .calc-row { grid-template-columns:1fr; }
+  .calc-result { grid-template-columns:1fr 1fr; }
+  .form-row-2 { grid-template-columns:1fr; }
+  .lp-rates-strip { flex-direction:column; }
+  .rate-pill { border-right:none; border-bottom:1px solid oklch(1 0 0/.1); }
+}
+</style>
+
+<!-- Hero -->
+<section class="lp-hero">
+  <div class="lp-logo">HNB<span>IB</span> &nbsp;Securities</div>
+  <h1>Government Securities &mdash; Guaranteed by the State, Managed by Experts</h1>
+  <p>Invest in Treasury Bills, Treasury Bonds, and Repos through Sri Lanka's licensed primary dealer backed by HNB Bank.</p>
+  <div class="lp-hero-cta">
+    <a class="btn-white" href="#invest-now">Invest Now</a>
+    <a class="btn-ghost-white" href={`${base}hnb-securities/`}>Full Details</a>
+  </div>
+  <div class="lp-rates-strip">
+    <div class="rate-pill"><strong>9.84%</strong><span>T-Bill 364D</span><em>indicative p.a.</em></div>
+    <div class="rate-pill"><strong>11.25%</strong><span>T-Bond 5Y</span><em>indicative p.a.</em></div>
+    <div class="rate-pill"><strong>8.50%</strong><span>Repo Overnight</span><em>indicative p.a.</em></div>
+    <div class="rate-pill"><strong>9.10%</strong><span>Repo 7D</span><em>indicative p.a.</em></div>
+  </div>
+</section>
+
+<!-- Products -->
+<section class="lp-products">
+  <div class="lp-products-inner">
+    <h2>Choose Your Investment</h2>
+    <p class="lp-products-sub">All products are sovereign-guaranteed instruments issued by the Government of Sri Lanka</p>
+    <div class="product-cards">
+      <div class="product-card">
+        <h3>Treasury Bills</h3>
+        <div class="product-rate">9.84% <span>p.a.</span></div>
+        <p>Short-term government discount securities with maturities of 91, 182, or 364 days. Ideal for parking liquidity at superior rates.</p>
+        <ul>
+          <li>Minimum: LKR 100,000</li>
+          <li>Tenors: 91 / 182 / 364 days</li>
+          <li>Zero credit risk (sovereign)</li>
+          <li>Auctioned bi-weekly by CBSL</li>
+        </ul>
+        <a class="btn-primary" href={`${base}hnb-securities/tbill/`}>Learn More</a>
+      </div>
+      <div class="product-card featured">
+        <div class="product-badge">Most Popular</div>
+        <h3>Repurchase Agreements</h3>
+        <div class="product-rate">8.50–9.10% <span>p.a.</span></div>
+        <p>Flexible overnight and term repos backed by government securities. High liquidity with competitive returns above fixed deposits.</p>
+        <ul>
+          <li>Minimum: LKR 250,000</li>
+          <li>Tenors: Overnight to 3 months</li>
+          <li>Backed by T-Bills/T-Bonds</li>
+          <li>Rollover on maturity</li>
+        </ul>
+        <a class="btn-primary" href={`${base}hnb-securities/repo/`}>Learn More</a>
+      </div>
+      <div class="product-card">
+        <h3>Treasury Bonds</h3>
+        <div class="product-rate">11.25% <span>p.a.</span></div>
+        <p>Medium-to-long-term fixed-coupon instruments with maturities of 2 to 30 years. Ideal for income-seeking and institutional investors.</p>
+        <ul>
+          <li>Minimum: LKR 1,000,000</li>
+          <li>Tenors: 2Y, 5Y, 10Y, 30Y</li>
+          <li>Semi-annual coupon payments</li>
+          <li>Secondary market tradeable</li>
+        </ul>
+        <a class="btn-primary" href={`${base}hnb-securities/`}>Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="lp-calc">
+  <div class="lp-calc-inner">
+    <h2>Estimate Your Return</h2>
+    <p class="lp-calc-sub">Indicative calculator — actual rates subject to market conditions at time of investment</p>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>Investment Amount (LKR)</label>
+        <input type="number" value="1000000" min="100000" step="50000" id="calc-amount">
+      </div>
+      <div class="calc-field">
+        <label>Instrument</label>
+        <select id="calc-type">
+          <option value="9.84">T-Bill 364D — 9.84%</option>
+          <option value="9.10">Repo 7D — 9.10%</option>
+          <option value="8.50">Repo Overnight — 8.50%</option>
+          <option value="11.25">T-Bond 5Y — 11.25%</option>
+        </select>
+      </div>
+      <div class="calc-field">
+        <label>Tenor (days)</label>
+        <input type="number" value="364" min="1" max="1825" id="calc-days">
+      </div>
+    </div>
+    <div class="calc-result">
+      <div class="calc-result-item"><strong id="r-interest">LKR 98,400</strong><span>Gross Interest</span></div>
+      <div class="calc-result-item"><strong id="r-net">LKR 88,560</strong><span>Net (after 10% WHT)</span></div>
+      <div class="calc-result-item"><strong id="r-maturity">LKR 1,088,560</strong><span>Maturity Value</span></div>
+    </div>
+    <p class="calc-note">WHT at 10% on interest income. Rates are indicative only. Not financial advice. <a href={`${base}hnb-securities/repo/calculator/`} style="color:var(--primary);">Full calculator →</a></p>
+  </div>
+</section>
+
+<!-- Form -->
+<section class="lp-form-section" id="invest-now">
+  <div class="lp-form-wrap">
+    <h2>Start Investing Today</h2>
+    <p>Submit your interest and a fixed income specialist will contact you within one business day.</p>
+    <form class="lp-form">
+      <div class="form-row-2">
+        <div><label>First Name</label><input type="text" placeholder="Ashan"></div>
+        <div><label>Last Name</label><input type="text" placeholder="Perera"></div>
+      </div>
+      <div><label>Email</label><input type="email" placeholder="ashan@example.com"></div>
+      <div><label>Mobile</label><input type="tel" placeholder="+94 77 000 0000"></div>
+      <div>
+        <label>Interested In</label>
+        <select>
+          <option>Repurchase Agreements (Repo)</option>
+          <option>Treasury Bills (T-Bill)</option>
+          <option>Treasury Bonds (T-Bond)</option>
+          <option>Not sure — need advice</option>
+        </select>
+      </div>
+      <div>
+        <label>Investment Amount (LKR)</label>
+        <select>
+          <option>LKR 250,000 – 1,000,000</option>
+          <option>LKR 1,000,000 – 5,000,000</option>
+          <option>LKR 5,000,000 – 25,000,000</option>
+          <option>Over LKR 25,000,000</option>
+        </select>
+      </div>
+      <button type="submit" class="lp-submit">Request a Callback →</button>
+      <p class="lp-form-note">Your information is protected under our <a href={`${base}privacy-policy/`} style="color:var(--primary);">Privacy Policy</a>.</p>
+    </form>
+  </div>
+</section>
+
+<div class="lp-footer">
+  <p>© 2024 HNB Securities Ltd — A licensed Primary Dealer. Regulated by the Central Bank of Sri Lanka &amp; SEC of Sri Lanka.</p>
+  <p style="margin-top:.5rem;">
+    <a href={`${base}hnb-securities/`}>Full Website</a>
+    <a href={`${base}hnb-securities/repo/`}>Repos</a>
+    <a href={`${base}hnb-securities/tbill/`}>T-Bills</a>
+    <a href={`${base}privacy-policy/`}>Privacy</a>
+    <a href={`${base}terms-and-conditions/`}>Terms</a>
+  </p>
+</div>
+
+<script>
+(function(){
+  function calc(){
+    var amt = parseFloat(document.getElementById('calc-amount').value) || 1000000;
+    var rate = parseFloat(document.getElementById('calc-type').value) || 9.84;
+    var days = parseFloat(document.getElementById('calc-days').value) || 364;
+    var gross = amt * (rate/100) * (days/365);
+    var net = gross * 0.9;
+    var maturity = amt + net;
+    function fmt(n){ return 'LKR ' + Math.round(n).toLocaleString('en-LK'); }
+    document.getElementById('r-interest').textContent = fmt(gross);
+    document.getElementById('r-net').textContent = fmt(net);
+    document.getElementById('r-maturity').textContent = fmt(maturity);
+  }
+  document.getElementById('calc-amount').addEventListener('input', calc);
+  document.getElementById('calc-type').addEventListener('change', calc);
+  document.getElementById('calc-days').addEventListener('input', calc);
+  calc();
+})();
+</script>
+</LandingLayout>

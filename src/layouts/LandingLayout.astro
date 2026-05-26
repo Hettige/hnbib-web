@@ -1,0 +1,32 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const pageTitle = title       ?? 'HNB Investment Bank';
+const pageDesc  = description ?? "Sri Lanka's leading full-service investment bank since 1992.";
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="icon" href={`${base}assets/images/favicon.svg`} type="image/svg+xml" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href={`${base}assets/css/main.css`} />
+  <slot name="head" />
+</head>
+<body class="tx-clean motion-full density-standard">
+  <slot />
+  <script src={`${base}assets/js/main.js`}></script>
+</body>
+</html>
