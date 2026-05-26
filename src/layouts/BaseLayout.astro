@@ -10,6 +10,17 @@ const base = import.meta.env.BASE_URL;
 
 const pageTitle = title       ?? 'HNB Investment Bank';
 const pageDesc  = description ?? "Sri Lanka's leading full-service investment bank since 1992.";
+
+// Active nav detection — works with Astro's trailing-slash paths
+const path = Astro.url.pathname;
+
+function navClass(segment: string): string {
+  if (segment === '') {
+    // Home: exact match only
+    return (path === base || path === base.slice(0, -1) + '/') ? 'active' : '';
+  }
+  return path.includes(`/${segment}`) ? 'active' : '';
+}
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -31,72 +42,104 @@ const pageDesc  = description ?? "Sri Lanka's leading full-service investment ba
 </head>
 <body class="tx-clean motion-full density-standard">
 
-  <!-- Ticker bar + sticky nav (exact prototype structure) -->
-  <div id="site-header-wrap">
-    <div class="ticker-bar" aria-label="Live market data">
-      <div class="ticker-track motion-continuous">
-        <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
-        <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
-        <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
-        <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
-        <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
-        <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
-        <span><span class="t-lbl">REPO</span> 7.50%</span>
-        <span><span class="t-lbl">USD/LKR</span> 302.45</span>
-        <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
-        <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
-        <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
-        <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
-        <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
-        <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
-        <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
-        <span><span class="t-lbl">REPO</span> 7.50%</span>
-        <span><span class="t-lbl">USD/LKR</span> 302.45</span>
-        <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
-      </div>
+  <!--
+    TICKER BAR — scrolls with the page (not sticky).
+    In the prototype this lives inside #site-header div.
+    The nav is injected as a sibling AFTER it so position:sticky;top:0
+    on .site-nav works: ticker scrolls away, nav pins to the top.
+  -->
+  <div class="ticker-bar" aria-label="Live market data">
+    <div class="ticker-track motion-continuous">
+      <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
+      <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
+      <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
+      <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
+      <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
+      <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
+      <span><span class="t-lbl">REPO</span> 7.50%</span>
+      <span><span class="t-lbl">USD/LKR</span> 302.45</span>
+      <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
+      <!-- duplicate for seamless infinite scroll -->
+      <span><span class="t-lbl">ASPI</span> 22,905.75 <span class="t-up">&#9650; 0.38%</span></span>
+      <span><span class="t-lbl">S&amp;P SL20</span> 6,284.24 <span class="t-up">&#9650; 0.27%</span></span>
+      <span><span class="t-lbl">T-Bill 91d</span> 7.25%</span>
+      <span><span class="t-lbl">T-Bill 182d</span> 7.50%</span>
+      <span><span class="t-lbl">T-Bill 364d</span> 7.75%</span>
+      <span><span class="t-lbl">T-Bond 2Y</span> 8.25%</span>
+      <span><span class="t-lbl">REPO</span> 7.50%</span>
+      <span><span class="t-lbl">USD/LKR</span> 302.45</span>
+      <span><span class="t-lbl">CSE Turnover</span> LKR 2.85 Bn</span>
     </div>
   </div>
 
-  <!-- Nav (exact prototype nav HTML, paths via base) -->
+  <!--
+    STICKY NAV — position:sticky;top:0 (set in main.css .site-nav).
+    Sibling of the ticker so the ticker scrolls away while this pins.
+    Matches the prototype header.js output exactly.
+  -->
   <nav class="site-nav" aria-label="Main navigation">
     <div class="nav-inner">
+
+      <!-- Desktop logo -->
       <a class="nav-logo" href={base}>
         <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="38" />
       </a>
+
+      <!-- Nav links list (ul>li>a pattern used by main.css) -->
       <ul class="nav-links">
+
+        <!-- Mobile logo — shown only when menu is open (main.css .mob-logo-li) -->
         <li class="mob-logo-li">
           <a href={base}>
             <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="36" />
           </a>
         </li>
-        <li><a href={`${base}about-us/`}>About</a></li>
-        <li><a href={`${base}hnb-stockbrokers/`}>Stockbrokers</a></li>
-        <li><a href={`${base}hnb-securities/`}>Securities</a></li>
-        <li><a href={`${base}corporate-finance/`}>Corporate Finance</a></li>
-        <li><a href={`${base}lanka-ventures-lvl/`}>Lanka Ventures</a></li>
-        <li><a href={`${base}news/`}>News</a></li>
-        <li><a href={`${base}team/`}>Team</a></li>
+
+        <li><a href={`${base}about-us/`}        class={navClass('about-us')}>About</a></li>
+        <li><a href={`${base}hnb-stockbrokers/`} class={navClass('hnb-stockbrokers')}>Stockbrokers</a></li>
+        <li><a href={`${base}hnb-securities/`}   class={navClass('hnb-securities')}>Securities</a></li>
+        <li><a href={`${base}corporate-finance/`} class={navClass('corporate-finance')}>Corporate Finance</a></li>
+        <li><a href={`${base}lanka-ventures-lvl/`} class={navClass('lanka-ventures-lvl')}>Lanka Ventures</a></li>
+        <li><a href={`${base}investor-relations/`} class={navClass('investor-relations')}>Investors</a></li>
+        <li><a href={`${base}news/`}             class={navClass('news')}>News</a></li>
       </ul>
-      <a class="btn-primary" href="mailto:info@hnbib.lk">Contact</a>
+
+      <!-- Contact CTA (hidden on mobile by main.css media query) -->
+      <a class="btn-primary" href={`${base}contact-us/`}>Contact</a>
+
+      <!-- Hamburger toggle — 3 spans animated by main.js initMobileNav() -->
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
+
     </div>
   </nav>
 
-  <!-- Page content -->
+  <!-- ── Page content ── -->
   <slot />
 
-  <!-- Footer (exact prototype footer HTML) -->
+  <!-- ── FOOTER — matches prototype footer.js output exactly ── -->
   <footer class="site-footer">
     <div class="footer-inner">
+
+      <!-- Brand column -->
       <div class="footer-brand">
         <a class="nav-logo" href={base}>
-          <img src={`${base}assets/images/logo/hnb-inv-logo.webp`} alt="HNB Investment Bank" height="32" style="filter:brightness(0) invert(1)" />
+          <img
+            src={`${base}assets/images/logo/hnb-inv-logo.webp`}
+            alt="HNB Investment Bank"
+            height="32"
+            style="filter:brightness(0) invert(1)"
+          />
         </a>
-        <p>No. 53 Srimath Anagarika Dharmapala Mawatha, Colombo 03, Sri Lanka.<br />
-        Regulated by the Securities &amp; Exchange Commission of Sri Lanka.</p>
+        <p>
+          No. 53 Srimath Anagarika Dharmapala Mawatha,<br />
+          Colombo 03, Sri Lanka.<br />
+          Regulated by the Securities &amp; Exchange Commission of Sri Lanka.
+        </p>
       </div>
+
+      <!-- Services column -->
       <div>
         <h5>Services</h5>
         <ul>
@@ -106,33 +149,42 @@ const pageDesc  = description ?? "Sri Lanka's leading full-service investment ba
           <li><a href={`${base}lanka-ventures-lvl/`}>Lanka Ventures</a></li>
         </ul>
       </div>
+
+      <!-- Fixed Income column -->
       <div>
         <h5>Fixed Income</h5>
         <ul>
-          <li><a href={`${base}hnb-securities/`}>Repurchase Agreements</a></li>
-          <li><a href={`${base}hnb-securities/`}>Treasury Bills</a></li>
+          <li><a href={`${base}hnb-securities/repo/`}>Repurchase Agreements</a></li>
+          <li><a href={`${base}hnb-securities/tbill/`}>Treasury Bills</a></li>
+          <li><a href={`${base}hnb-securities/repo/calculator/`}>Rate Calculator</a></li>
           <li><a href={`${base}hnb-securities/`}>T-Bond Market</a></li>
-          <li><a href={`${base}hnb-securities/`}>Rate Calculator</a></li>
         </ul>
       </div>
+
+      <!-- Company column -->
       <div>
         <h5>Company</h5>
         <ul>
           <li><a href={`${base}about-us/`}>About Us</a></li>
-          <li><a href={`${base}team/`}>Our Team</a></li>
+          <li><a href={`${base}investor-relations/`}>Investor Relations</a></li>
           <li><a href={`${base}news/`}>News &amp; Insights</a></li>
-          <li><a href="mailto:careers@hnbib.lk">Careers</a></li>
+          <li><a href={`${base}careers/`}>Careers</a></li>
         </ul>
       </div>
+
+      <!-- Legal column -->
       <div>
         <h5>Legal</h5>
         <ul>
-          <li><a href="https://hnbib.lk/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
-          <li><a href="https://hnbib.lk/terms-and-conditions" target="_blank" rel="noopener">Terms &amp; Conditions</a></li>
-          <li><a href="mailto:info@hnbib.lk">Contact Us</a></li>
+          <li><a href={`${base}privacy-policy/`}>Privacy Policy</a></li>
+          <li><a href={`${base}terms-and-conditions/`}>Terms &amp; Conditions</a></li>
+          <li><a href={`${base}contact-us/`}>Contact Us</a></li>
         </ul>
       </div>
+
     </div>
+
+    <!-- Footer bar -->
     <div class="footer-bar">
       <div style="max-width:var(--content-w);margin:0 auto;padding:0 var(--sp-m) var(--sp-m);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <span>&copy; 2026 HNB Investment Bank Limited. All rights reserved.</span>
@@ -141,8 +193,26 @@ const pageDesc  = description ?? "Sri Lanka's leading full-service investment ba
     </div>
   </footer>
 
-  <!-- Main JS (handles reveal, count-up, sparklines, mobile nav, etc.) -->
+  <!-- Main JS — handles ticker, reveal, count-up, mobile nav, active nav, etc. -->
   <script src={`${base}assets/js/main.js`}></script>
+
+  <!--
+    Active nav fix for Astro trailing-slash paths.
+    The prototype's initActiveNav() matches by filename (e.g. "about-us.html").
+    Astro paths end in "/" so we override with a path-segment match instead.
+  -->
+  <script>
+    (function () {
+      var path = window.location.pathname;
+      document.querySelectorAll('.nav-links a, .nav-links li a').forEach(function (a) {
+        var href = a.getAttribute('href') || '';
+        // Skip mob-logo-li home link
+        if (!a.closest('.mob-logo-li') && href && path.startsWith(href) && href !== '/') {
+          a.classList.add('active');
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
