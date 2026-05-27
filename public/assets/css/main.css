@@ -956,14 +956,10 @@ input.error,select.error,textarea.error { border-color:oklch(0.50 0.18 30)!impor
   .cred-monument-inner { grid-template-columns:1fr !important; }
   .cred-stats-row { grid-template-columns:1fr 1fr !important; }
 }
-@media(max-width:768px) {
-  :root { --sp-l:48px; --sp-xl:64px; }
-  .grid-2,.grid-3,.grid-4,.biz-a-grid { grid-template-columns:1fr; }
-  .footer-inner { grid-template-columns:1fr 1fr; }
-
-  /* Mobile nav */
+/* ── Mobile nav: hamburger at ≤980px, desktop links above ────── */
+@media(max-width:980px) {
   .nav-links {
-    /* hidden by default on mobile — toggled open by JS */
+    /* hidden by default — toggled open by JS */
     display:none;
     list-style:none;
     margin:0;
@@ -1039,9 +1035,15 @@ input.error,select.error,textarea.error { border-color:oklch(0.50 0.18 30)!impor
   /* Hamburger bars turn white when menu open */
   .nav-toggle.open span { background:#fff; }
 
-  /* Hide desktop Contact CTA on mobile — it's in the menu conceptually */
+  /* Hide desktop Contact CTA — contact is accessible via menu */
   .nav-inner > .btn-primary { display:none; }
+}
 
+/* ── Small screen layout adjustments (768px and below) ───────── */
+@media(max-width:768px) {
+  :root { --sp-l:48px; --sp-xl:64px; }
+  .grid-2,.grid-3,.grid-4,.biz-a-grid { grid-template-columns:1fr; }
+  .footer-inner { grid-template-columns:1fr 1fr; }
   #back-to-top { bottom:20px; right:16px; width:40px; height:40px; }
 }
 @media(max-width:480px) {
