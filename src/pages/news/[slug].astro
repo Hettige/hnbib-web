@@ -24,7 +24,7 @@ const body = full?.body ?? null;
   ogImage={article.featuredImage?.url}
 >
   <!-- Slim article hero -->
-  <div id="site-header" class="site-header">
+  <div class="article-hero-wrap">
     <div class="article-hero">
       {article.featuredImage && (
         <img
@@ -121,7 +121,7 @@ const body = full?.body ?? null;
   }
 </script>
 
-<style>
+<style is:global>
 /* Hero */
 .article-hero {
   position: relative;
