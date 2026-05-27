@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getArticles, getArticle, formatDate, imgUrl } from '../../lib/strapi';
+import { getArticles, formatDate, imgUrl } from '../../lib/strapi';
 
 export async function getStaticPaths() {
-  const articles = await getArticles();
+  // populate full=true fetches body blocks in the same request — no per-article re-fetch needed
+  const articles = await getArticles({ full: true });
   return articles.map(a => ({
     params: { slug: a.slug },
     props:  { article: a },
@@ -13,9 +14,8 @@ export async function getStaticPaths() {
 const { article } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-// Re-fetch for body content (getStaticPaths prop may have no body)
-const full = await getArticle(article.slug);
-const body = full?.body ?? null;
+// Body is already included in the props from getStaticPaths
+const body = article.body ?? null;
 ---
 
 <BaseLayout

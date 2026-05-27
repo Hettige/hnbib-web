@@ -128,8 +128,10 @@ export async function getServices(): Promise<Service[]> {
   return r.data;
 }
 
-export async function getArticles(opts?: { limit?: number; category?: string }): Promise<Article[]> {
-  let q = '/articles?populate=featuredImage&sort=publishDate:desc&status=published';
+export async function getArticles(opts?: { limit?: number; category?: string; full?: boolean }): Promise<Article[]> {
+  // full:true uses populate=* to fetch body blocks too — saves N per-article re-fetches at build time
+  const pop = opts?.full ? '*' : 'featuredImage';
+  let q = `/articles?populate=${pop}&sort=publishDate:desc&status=published`;
   if (opts?.limit) q += `&pagination[limit]=${opts.limit}`;
   if (opts?.category) q += `&filters[category][$eq]=${encodeURIComponent(opts.category)}`;
   const r = await get<{ data: Article[] }>(q);
