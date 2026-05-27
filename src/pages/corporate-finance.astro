@@ -109,7 +109,7 @@ const allDeals  = deals.length > 0 ? deals : [];
   <h2 class="cta-final-h2 reveal">Ready to raise capital or execute a transaction?</h2>
   <p class="cta-final-sub reveal">Contact our Corporate Finance team to discuss your mandate.</p>
   <div class="cta-final-btns reveal">
-    <a href="mailto:cf@hnbib.lk" class="btn-white">Mandate Enquiry</a>
+    <a href={`${base}contact-us/`} class="btn-white">Mandate Enquiry</a>
     <a href={`${base}news/`} class="btn-ghost-white">Our Deal News →</a>
   </div>
   <div class="cta-trust reveal"><span>LKR 200 Bn raised</span><span class="dot">·</span><span>CSE Member</span><span class="dot">·</span><span>SEC Licensed</span><span class="dot">·</span><span>Since 1992</span></div>
@@ -125,4 +125,10 @@ const allDeals  = deals.length > 0 ? deals : [];
 .case-card-headline { font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.2; }
 .case-card-size { font-size: 28px; font-weight: 800; color: var(--primary); }
 .case-card-desc { font-size: 13px; color: var(--ink-2); line-height: 1.55; flex: 1; }
+.deal-type { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: var(--bg-2); color: var(--ink-2); padding: 3px 8px; border-radius: 3px; display: inline-block; }
+.deal-size { font-weight: 700; color: var(--primary); }
+.step-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp-m); position: relative; }
+.step-num { font-size: 48px; font-weight: 800; color: var(--line-2); line-height: 1; margin-bottom: 12px; }
+.step-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.step-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
 </style>

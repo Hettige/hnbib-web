@@ -4,129 +4,76 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
-  title="Lanka Ventures - Private Equity & Venture Capital"
-  description="Sri Lanka's longest-standing private equity manager. Lanka Ventures provides growth capital to mid-market companies and manages institutional PE/VC mandates."
+  title="Lanka Ventures / LVL Energy Fund — HNB Investment Bank"
+  description="Two CSE-listed funds managed by HNB Investment Bank — Lanka Ventures, Sri Lanka's pioneer venture capital vehicle, and LVL Energy Fund, focused on the energy sector."
 >
-  <div id="site-header" class="site-header page-hero-lv">
-    <div class="hero-overlay"></div>
-    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
-      <p class="overline">Lanka Ventures Limited</p>
-      <h1>Private Equity &amp; Venture Capital</h1>
-      <p class="hero-sub">
-        Sri Lanka's longest-standing private equity manager.
-        Growth capital for mid-market companies and institutional PE/VC mandates.
-      </p>
-      <div style="display:flex;gap:var(--sp-m);flex-wrap:wrap;margin-top:var(--sp-l)">
-        <a href="mailto:ventures@hnbib.lk" class="btn btn-primary">Explore Opportunities</a>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">Lanka Ventures PLC · LVL Energy Fund PLC</div>
+  <h1 class="page-header-h1">Venture capital and energy investment since 1992.</h1>
+  <p class="page-header-lead">Two CSE-listed funds managed by HNB Investment Bank — Lanka Ventures, Sri Lanka's pioneer venture capital vehicle, and LVL Energy Fund, focused on the energy sector.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- S1: Heritage story -->
+<section class="section-host" data-section-id="s1-heritage" data-section-label="Heritage">
+  <div class="variant section-toggle-active" data-variant="B" data-variant-label="Middle">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">Our Story</div><h2 class="section-h2">From venture capital to energy — a 30-year evolution.</h2></div>
+      <div style="display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:12px" class="reveal">
+        <div style="flex:1;min-width:180px;padding:var(--sp-m);background:var(--card);border:1px solid var(--line);border-radius:var(--radius) 0 0 var(--radius)"><div style="font-size:40px;font-weight:800;color:var(--primary);margin-bottom:8px">1992</div><div style="font-weight:700;color:var(--ink);margin-bottom:6px">Incorporated</div><div style="font-size:13px;color:var(--ink-2)">Lanka Ventures PLC established as Sri Lanka's first institutional VC fund.</div></div>
+        <div style="flex:1;min-width:180px;padding:var(--sp-m);background:var(--bg);border:1px solid var(--line);border-left:none"><div style="font-size:40px;font-weight:800;color:var(--primary);margin-bottom:8px">1995</div><div style="font-weight:700;color:var(--ink);margin-bottom:6px">CSE Listing</div><div style="font-size:13px;color:var(--ink-2)">Lanka Ventures listed on the Colombo Stock Exchange.</div></div>
+        <div style="flex:1;min-width:180px;padding:var(--sp-m);background:var(--bg);border:1px solid var(--line);border-left:none"><div style="font-size:40px;font-weight:800;color:var(--accent-d);margin-bottom:8px">2006</div><div style="font-weight:700;color:var(--ink);margin-bottom:6px">Energy Pivot</div><div style="font-size:13px;color:var(--ink-2)">Strategic shift to energy investments. LVL Energy Fund PLC launched.</div></div>
+        <div style="flex:1;min-width:180px;padding:var(--sp-m);background:var(--primary);border-radius:0 var(--radius) var(--radius) 0"><div style="font-size:40px;font-weight:800;color:oklch(1 0 0/.25);margin-bottom:8px">Now</div><div style="font-weight:700;color:#fff;margin-bottom:6px">Dual Funds</div><div style="font-size:13px;color:oklch(1 0 0/.65)">Two CSE-listed funds managed by HNB Investment Bank.</div></div>
       </div>
-    </div>
+    </div></div>
   </div>
+</section>
 
-  <!-- What we do -->
-  <section class="section-pad">
-    <div class="section-inner">
-      <p class="section-eyebrow">Investment Strategy</p>
-      <h2 class="section-title">What Lanka Ventures Does</h2>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-l);margin-top:var(--sp-xl)">
-        {[
-          { icon: '🌱', title: 'Growth Capital', desc: 'Providing equity and quasi-equity capital to established mid-market businesses seeking to scale, diversify, or transition ownership.' },
-          { icon: '🏗️', title: 'PE Fund Management', desc: 'Managing institutional private equity mandates with rigorous governance, regular reporting, and alignment with LP objectives.' },
-          { icon: '💡', title: 'Venture Capital', desc: 'Early-stage investments in high-potential Sri Lankan enterprises across technology, healthcare, consumer, and financial services.' },
-        ].map(item => (
-          <div class="lv-card">
-            <div class="lv-icon">{item.icon}</div>
-            <h3 class="lv-title">{item.title}</h3>
-            <p class="lv-desc">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Track record -->
-  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
-    <div class="section-inner">
-      <p class="section-eyebrow">Our Heritage</p>
-      <h2 class="section-title">Decades of Private Equity in Sri Lanka</h2>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-2xl);align-items:center;margin-top:var(--sp-xl)">
-        <div>
-          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:var(--sp-m)">
-            Lanka Ventures Limited is one of Sri Lanka's pioneering private equity fund managers,
-            with a track record spanning more than three decades. As a subsidiary of HNB Investment Bank,
-            Lanka Ventures benefits from deep capital markets expertise and an extensive corporate network.
-          </p>
-          <p style="color:var(--text-muted);line-height:1.8">
-            Our investment philosophy centres on partnering with management teams to drive sustainable value creation
-            through operational improvements, strategic repositioning, and selective add-on acquisitions.
-          </p>
+<!-- S2: Investment focus -->
+<section class="section-host" data-section-id="s2-funds" data-section-label="Funds">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal"><div class="section-eyebrow">The Funds</div><h2 class="section-h2">Two vehicles. One manager.</h2></div>
+      <div class="grid-2">
+        <div class="fund-card reveal">
+          <div class="fund-card-tag">CSE Listed · Venture Capital</div>
+          <div class="fund-card-name">Lanka Ventures PLC</div>
+          <div class="fund-card-year">1992</div>
+          <div class="fund-card-desc">Sri Lanka's pioneer institutionally-backed venture capital fund. Listed on the CSE since 1995. Provides growth capital to early and mid-stage Sri Lankan enterprises.</div>
+          <a href={`${base}investor-relations/`} class="btn-ghost" style="align-self:flex-start;font-size:13px;padding:8px 16px">Investor info →</a>
         </div>
-        <div class="lv-stats-grid">
-          {[
-            { num: '30+', label: 'Years in Private Equity' },
-            { num: 'Mid-Market', label: 'Primary Focus' },
-            { num: 'Multiple', label: 'Sectors Covered' },
-            { num: 'HNB Group', label: 'Group Backing' },
-          ].map(stat => (
-            <div class="lv-stat">
-              <span class="lv-stat-num">{stat.num}</span>
-              <span class="lv-stat-label">{stat.label}</span>
-            </div>
-          ))}
+        <div class="fund-card reveal" style="border-top:3px solid var(--accent)">
+          <div class="fund-card-tag" style="color:var(--accent-d)">CSE Listed · Energy</div>
+          <div class="fund-card-name">LVL Energy Fund PLC</div>
+          <div class="fund-card-year" style="color:var(--accent-d)">2006</div>
+          <div class="fund-card-desc">Launched following the 2006 energy sector pivot, LVL Energy Fund focuses on renewable and conventional energy investments across Sri Lanka. Separately listed on the CSE.</div>
+          <a href={`${base}investor-relations/`} class="btn-ghost" style="align-self:flex-start;font-size:13px;padding:8px 16px;border-color:var(--accent);color:var(--accent-d)">Investor info →</a>
         </div>
       </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section class="section-pad cta-final">
-    <div class="cta-final-inner">
-      <h2 class="section-title">Seeking Growth Capital or a Strategic Partner?</h2>
-      <p class="cta-final-sub">Lanka Ventures partners with ambitious management teams and institutional investors across Sri Lanka.</p>
-      <div class="cta-actions">
-        <a href="mailto:ventures@hnbib.lk" class="btn btn-primary btn-lg">Get in Touch</a>
-        <a href={`${base}about-us/`} class="btn btn-outline btn-outline-light btn-lg">About HNBIB</a>
-      </div>
-    </div>
-  </section>
+<div class="cta-final"><div class="cta-final-inner">
+  <h2 class="cta-final-h2 reveal">Investor enquiries welcome.</h2>
+  <p class="cta-final-sub reveal">For fund information, shareholder queries, or investment opportunities in Lanka Ventures or LVL Energy Fund, contact our Investor Relations team.</p>
+  <div class="cta-final-btns reveal">
+    <a href={`${base}investor-relations/`} class="btn-white">Investor Relations</a>
+    <a href={`${base}contact-us/`} class="btn-ghost-white">Contact Us →</a>
+  </div>
+  <div class="cta-trust reveal"><span>CSE Listed</span><span class="dot">·</span><span>HNB Investment Bank managed</span><span class="dot">·</span><span>Since 1992</span></div>
+</div></div>
+
+</main>
+
 </BaseLayout>
 
 <style>
-.page-hero-lv {
-  position: relative;
-  background: linear-gradient(135deg, oklch(0.24 0.10 240), oklch(0.38 0.14 262));
-  padding: var(--sp-3xl) 0 var(--sp-2xl);
-  color: #fff;
-  overflow: hidden;
-}
-.page-hero-lv .hero-overlay {
-  position: absolute; inset: 0;
-  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/business_person_futuristic_business_environment_23_2150970181_87f71ded8a.jpg') center/cover no-repeat;
-  opacity: .15;
-}
-.page-hero-inner { max-width: 640px; }
-.page-hero-lv .overline { color: oklch(1 0 0 / .60); }
-.page-hero-lv h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
-.page-hero-lv .hero-sub { color: oklch(1 0 0 / .75); }
-
-.lv-card { background: #fff; border-radius: 12px; padding: var(--sp-l); border: 1px solid oklch(0 0 0 / .08); }
-.lv-icon { font-size: 1.8rem; margin-bottom: var(--sp-m); }
-.lv-title { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 var(--sp-s); }
-.lv-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin: 0; }
-
-.lv-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-m); }
-.lv-stat { background: #fff; border-radius: 12px; padding: var(--sp-l); text-align: center; border: 1px solid oklch(0 0 0 / .08); }
-.lv-stat-num { display: block; font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-.lv-stat-label { display: block; font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
-
-.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
-.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
-.cta-final .section-title { color: #fff; }
-.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
-.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
-
-@media (max-width: 900px) {
-  [style*="grid-template-columns:repeat(3"] { grid-template-columns: 1fr !important; }
-  [style*="grid-template-columns:repeat(2"] { grid-template-columns: 1fr !important; }
-  .lv-stats-grid { grid-template-columns: 1fr 1fr; }
-}
+.fund-card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:var(--sp-m); display:flex; flex-direction:column; gap:12px; }
+.fund-card-tag { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--primary); }
+.fund-card-name { font-size:22px; font-weight:800; color:var(--ink); }
+.fund-card-year { font-size:36px; font-weight:800; color:var(--primary); }
+.fund-card-desc { font-size:13px; color:var(--ink-2); line-height:1.55; flex:1; }
 </style>

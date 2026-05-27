@@ -53,10 +53,9 @@ const body = full?.body ?? null;
     <article class="article-body">
       <p class="article-excerpt">{article.excerpt}</p>
 
-      {body && body.length > 0
-        ? <div class="article-content" id="article-content" data-blocks={JSON.stringify(body)}></div>
-        : <p class="article-no-body">Full article content is managed in the CMS. Check back soon.</p>
-      }
+      {body && body.length > 0 && (
+        <div class="article-content" id="article-content" data-blocks={JSON.stringify(body)}></div>
+      )}
     </article>
 
     <!-- Sidebar -->
@@ -69,7 +68,7 @@ const body = full?.body ?? null;
       <div class="sidebar-card">
         <h3 class="sidebar-title">Get in Touch</h3>
         <p>Interested in our services? Our specialists are ready to help.</p>
-        <a href="mailto:info@hnbib.lk" class="btn btn-primary btn-sm">Contact Us</a>
+        <a href={`${base}contact-us/`} class="btn btn-primary btn-sm">Contact Us</a>
       </div>
     </aside>
   </div>

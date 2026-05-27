@@ -138,7 +138,7 @@ export async function getArticles(opts?: { limit?: number; category?: string }):
 
 export async function getArticle(slug: string): Promise<Article | null> {
   const r = await get<{ data: Article[] }>(
-    `/articles?populate=featuredImage&filters[slug][$eq]=${encodeURIComponent(slug)}&status=published`
+    `/articles?populate=*&filters[slug][$eq]=${encodeURIComponent(slug)}&status=published`
   );
   return r.data?.[0] ?? null;
 }

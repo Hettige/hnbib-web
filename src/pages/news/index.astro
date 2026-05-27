@@ -5,7 +5,27 @@ import { getArticles, formatDate, imgUrl } from '../../lib/strapi';
 const base = import.meta.env.BASE_URL;
 const articles = await getArticles();
 
-const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnership', 'Company News'] as const;
+// Serialise for client-side pagination JS
+const POSTS = articles.map(a => ({
+  slug:    a.slug,
+  title:   a.title,
+  cat:     a.category,
+  excerpt: a.excerpt,
+  date:    formatDate(a.publishDate),
+  read:    a.readTime ?? '3 min read',
+  img:     a.featuredImage ? imgUrl(a.featuredImage, 'medium') : '',
+  imgAlt:  a.featuredImage?.alternativeText ?? a.title,
+}));
+
+// Hardcoded fallback posts (used when Strapi returns nothing)
+const FALLBACK_POSTS = [
+  { slug:'aspi-22000', title:'ASPI Crosses 22,000 — What the Recovery Means for Equity Investors in 2026', cat:'Market Commentary', excerpt:'After a sustained period of macroeconomic pressure, Sri Lanka\'s equity market is signalling a clear inflection. Our Head of Research unpacks the drivers.', date:'15 May 2026', read:'5 min read', img:'', imgAlt:'' },
+  { slug:'tbill-yields-ease', title:'T-Bill Yields Ease for Third Consecutive Auction', cat:'Market Commentary', excerpt:'Three successive auction results show softening yields across all T-Bill tenors, signalling easing monetary conditions.', date:'12 May 2026', read:'3 min read', img:'', imgAlt:'' },
+  { slug:'hnb-debenture', title:'HNB Investment Bank Completes LKR 7.5 Bn Debenture for HNB PLC', cat:'Corporate Finance', excerpt:'Acting as Lead Manager, HNB Investment Bank successfully closed a LKR 7.5 billion listed debenture for Hatton National Bank PLC.', date:'8 May 2026', read:'4 min read', img:'', imgAlt:'' },
+  { slug:'cse-banks-q1', title:'CSE Banks Sector — Q1 2026 Review', cat:'Market Commentary', excerpt:'A sector-level review of listed banking stocks. Earnings resilience, credit quality, and re-rating catalysts.', date:'1 May 2026', read:'6 min read', img:'', imgAlt:'' },
+  { slug:'alpha-fire-ipo', title:'Alpha Fire Services IPO — Subscription Opens 20 May', cat:'Corporate Finance', excerpt:'HNB Investment Bank is acting as Manager for the Alpha Fire Services IPO, opening for public subscription from 20 May 2026.', date:'18 Apr 2026', read:'3 min read', img:'', imgAlt:'' },
+  { slug:'lvl-energy-results', title:'LVL Energy Fund Posts Improved Q1 Results', cat:'Company News', excerpt:'LVL Energy Fund PLC reported improved profitability in Q1 2026, driven by higher energy tariffs and improved capacity utilisation.', date:'10 Apr 2026', read:'3 min read', img:'', imgAlt:'' },
+];
 ---
 
 <BaseLayout
@@ -25,69 +45,21 @@ const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnershi
 
     <!-- Filter tabs -->
     <div class="news-filters" role="tablist" aria-label="Filter articles by category">
-      {categories.map((cat, i) => (
-        <button class={`news-filter-btn${i === 0 ? ' active' : ''}`} data-cat={cat} role="tab" aria-selected={i === 0 ? 'true' : 'false'}>{cat}</button>
-      ))}
+      <button class="news-filter-btn active" data-cat="all" role="tab" aria-selected="true">All</button>
+      <button class="news-filter-btn" data-cat="Market Commentary" role="tab" aria-selected="false">Market Commentary</button>
+      <button class="news-filter-btn" data-cat="Corporate Finance" role="tab" aria-selected="false">Corporate Finance</button>
+      <button class="news-filter-btn" data-cat="Partnership" role="tab" aria-selected="false">Partnership</button>
+      <button class="news-filter-btn" data-cat="Company News" role="tab" aria-selected="false">Company News</button>
     </div>
 
     <!-- Result count -->
-    <div class="news-count" id="news-count" aria-live="polite">{articles.length} article{articles.length !== 1 ? 's' : ''}</div>
+    <div class="news-count" id="news-count" aria-live="polite"></div>
 
-    <!-- Article grid (rendered statically, filtered via JS) -->
-    <div class="news-grid-wrap" id="news-grid">
-      {articles.length > 0 ? (
-        <>
-          <!-- Featured: first article -->
-          <a href={`${base}news/${articles[0].slug}/`} class="nc-featured" data-category={articles[0].category}>
-            <div class="nc-featured-img">
-              {articles[0].featuredImage
-                ? <img src={imgUrl(articles[0].featuredImage, 'medium')} alt={articles[0].featuredImage.alternativeText ?? articles[0].title} loading="eager" />
-                : <div style="width:100%;height:100%;background:oklch(0.36 0.14 242)"></div>
-              }
-              <div class="nc-featured-img-overlay"></div>
-              <div class="nc-featured-badge">Featured</div>
-            </div>
-            <div class="nc-featured-body">
-              <span class="nc-featured-tag">{articles[0].category}</span>
-              <div class="nc-featured-title">{articles[0].title}</div>
-              <div class="nc-featured-excerpt">{articles[0].excerpt}</div>
-              <div class="nc-featured-meta">{formatDate(articles[0].publishDate)} &middot; {articles[0].readTime ?? '5 min read'}</div>
-              <div class="nc-featured-cta">Read article <span aria-hidden="true">→</span></div>
-            </div>
-          </a>
+    <!-- Dynamic grid (filled by JS) -->
+    <div class="news-grid-wrap" id="news-grid"></div>
 
-          <!-- Remaining articles grid -->
-          {articles.slice(1).length > 0 && (
-            <div class="news-cards-grid" id="news-cards-grid">
-              {articles.slice(1).map(a => (
-                <a href={`${base}news/${a.slug}/`} class="nc" data-category={a.category}>
-                  <div class="nc-img">
-                    {a.featuredImage
-                      ? <img src={imgUrl(a.featuredImage, 'small')} alt={a.featuredImage.alternativeText ?? a.title} loading="lazy" />
-                      : <div style="width:100%;height:100%;background:oklch(0.96 0.008 242)"></div>
-                    }
-                    <div class="nc-img-overlay"></div>
-                  </div>
-                  <div class="nc-body">
-                    <div class="nc-tag">{a.category}</div>
-                    <div class="nc-title">{a.title}</div>
-                    <div class="nc-footer">
-                      <span class="nc-meta">{formatDate(a.publishDate)} &middot; {a.readTime ?? '3 min read'}</span>
-                      <span class="nc-read">Read <span aria-hidden="true">→</span></span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          )}
-        </>
-      ) : (
-        <div class="news-empty">
-          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <p>No articles yet. Check back soon.</p>
-        </div>
-      )}
-    </div>
+    <!-- Pagination -->
+    <div class="news-pagination" id="news-pagination"></div>
 
   </div>
 </section>
@@ -95,50 +67,144 @@ const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnershi
 
 </BaseLayout>
 
-<script>
+<script is:inline define:vars={{ POSTS, FALLBACK_POSTS, base }}>
 (function () {
   'use strict';
 
-  var currentCat = 'all';
+  var ALL_POSTS = POSTS.length > 0 ? POSTS : FALLBACK_POSTS;
+  var PER_PAGE  = 4;
+  var currentPage = 1;
+  var currentCat  = 'all';
 
-  function filter(cat: string) {
-    currentCat = cat.toLowerCase() === 'all' ? 'all' : cat;
+  function filtered() {
+    if (currentCat === 'all') return ALL_POSTS;
+    return ALL_POSTS.filter(function(p) { return p.cat === currentCat; });
+  }
 
-    const featured = document.querySelector<HTMLElement>('.nc-featured');
-    const cards    = document.querySelectorAll<HTMLElement>('.nc');
-    const count    = document.getElementById('news-count');
+  function featuredHTML(p) {
+    var imgHtml = p.img
+      ? '<img src="' + p.img + '" alt="' + escHtml(p.imgAlt) + '" loading="eager" />'
+      : '<div style="width:100%;height:100%;background:oklch(0.36 0.14 242)"></div>';
+    return '<a href="' + base + 'news/' + p.slug + '/" class="nc-featured" data-category="' + escHtml(p.cat) + '">' +
+      '<div class="nc-featured-img">' + imgHtml + '<div class="nc-featured-img-overlay"></div><div class="nc-featured-badge">Featured</div></div>' +
+      '<div class="nc-featured-body">' +
+        '<span class="nc-featured-tag">' + escHtml(p.cat) + '</span>' +
+        '<div class="nc-featured-title">' + escHtml(p.title) + '</div>' +
+        '<div class="nc-featured-excerpt">' + escHtml(p.excerpt) + '</div>' +
+        '<div class="nc-featured-meta">' + escHtml(p.date) + ' &middot; ' + escHtml(p.read) + '</div>' +
+        '<div class="nc-featured-cta">Read article <span aria-hidden="true">&rarr;</span></div>' +
+      '</div>' +
+    '</a>';
+  }
 
-    let visible = 0;
+  function cardHTML(p) {
+    var imgHtml = p.img
+      ? '<img src="' + p.img + '" alt="' + escHtml(p.imgAlt) + '" loading="lazy" />'
+      : '<div style="width:100%;height:100%;background:oklch(0.96 0.008 242)"></div>';
+    return '<a href="' + base + 'news/' + p.slug + '/" class="nc" data-category="' + escHtml(p.cat) + '">' +
+      '<div class="nc-img">' + imgHtml + '<div class="nc-img-overlay"></div></div>' +
+      '<div class="nc-body">' +
+        '<div class="nc-tag">' + escHtml(p.cat) + '</div>' +
+        '<div class="nc-title">' + escHtml(p.title) + '</div>' +
+        '<div class="nc-footer"><span class="nc-meta">' + escHtml(p.date) + ' &middot; ' + escHtml(p.read) + '</span><span class="nc-read">Read <span aria-hidden="true">&rarr;</span></span></div>' +
+      '</div>' +
+    '</a>';
+  }
 
-    if (featured) {
-      const show = currentCat === 'all' || (featured.dataset.category ?? '') === cat;
-      featured.style.display = show ? '' : 'none';
-      if (show) visible++;
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function render(scrollUp) {
+    var posts  = filtered();
+    var total  = posts.length;
+    var pages  = Math.max(1, Math.ceil(total / PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+
+    var start = (currentPage - 1) * PER_PAGE;
+    var slice = posts.slice(start, start + PER_PAGE);
+
+    var html = '';
+    if (total === 0) {
+      html = '<div class="news-empty"><svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><p>No articles yet. Check back soon.</p></div>';
+    } else {
+      // Page 1 shows first as featured, rest as grid
+      // Other pages show all as grid
+      if (currentPage === 1 && slice.length > 0) {
+        html += featuredHTML(slice[0]);
+        var rest = slice.slice(1);
+        if (rest.length > 0) {
+          html += '<div class="news-cards-grid">' + rest.map(cardHTML).join('') + '</div>';
+        }
+      } else {
+        html += '<div class="news-cards-grid">' + slice.map(cardHTML).join('') + '</div>';
+      }
     }
 
-    cards.forEach(card => {
-      const show = currentCat === 'all' || (card.dataset.category ?? '') === cat;
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
+    var grid = document.getElementById('news-grid');
+    if (grid) grid.innerHTML = html;
 
+    var count = document.getElementById('news-count');
     if (count) {
-      count.textContent = visible + ' article' + (visible !== 1 ? 's' : '') +
-        (currentCat !== 'all' ? ' in ' + cat : '');
+      count.textContent = total + ' article' + (total !== 1 ? 's' : '') +
+        (currentCat !== 'all' ? ' in ' + currentCat : '');
+    }
+
+    renderPagination(pages);
+
+    if (scrollUp) {
+      var el = document.getElementById('news-grid');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  document.querySelectorAll<HTMLButtonElement>('.news-filter-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll<HTMLButtonElement>('.news-filter-btn').forEach(b => {
+  function renderPagination(totalPages) {
+    var pag = document.getElementById('news-pagination');
+    if (!pag) return;
+    if (totalPages <= 1) { pag.innerHTML = ''; return; }
+
+    var html = '<div class="pag-inner">';
+    html += '<button class="pag-btn' + (currentPage === 1 ? ' disabled' : '') + '" id="pag-prev" aria-label="Previous page">&larr; Prev</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      html += '<button class="pag-num' + (i === currentPage ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+    }
+    html += '<button class="pag-btn' + (currentPage === totalPages ? ' disabled' : '') + '" id="pag-next" aria-label="Next page">Next &rarr;</button>';
+    html += '</div>';
+    pag.innerHTML = html;
+
+    var prev = document.getElementById('pag-prev');
+    var next = document.getElementById('pag-next');
+    if (prev) prev.addEventListener('click', function() {
+      if (currentPage > 1) { currentPage--; render(true); }
+    });
+    if (next) next.addEventListener('click', function() {
+      if (currentPage < totalPages) { currentPage++; render(true); }
+    });
+    pag.querySelectorAll('.pag-num').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var p = parseInt(btn.getAttribute('data-page') || '1', 10);
+        if (p !== currentPage) { currentPage = p; render(true); }
+      });
+    });
+  }
+
+  // Filter buttons
+  document.querySelectorAll('.news-filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.news-filter-btn').forEach(function(b) {
         b.classList.remove('active');
         b.setAttribute('aria-selected', 'false');
       });
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
-      filter(this.dataset.cat ?? 'All');
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      currentCat  = btn.getAttribute('data-cat') || 'all';
+      currentPage = 1;
+      render(false);
     });
   });
+
+  // Initial render
+  render(false);
 })();
 </script>
 
@@ -177,7 +243,6 @@ const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnershi
 }
 
 .news-grid-wrap { transition: opacity .22s ease; }
-.news-grid-wrap.fading { opacity: 0; pointer-events: none; }
 
 .nc-featured {
   display: grid;
@@ -379,6 +444,42 @@ const categories = ['All', 'Market Commentary', 'Corporate Finance', 'Partnershi
 }
 .news-empty svg { margin: 0 auto var(--sp-m); display: block; opacity: .3; }
 .news-empty p { font-size: 15px; }
+
+/* Pagination */
+.news-pagination { margin-top: var(--sp-l); }
+.pag-inner { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.pag-btn {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--primary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all var(--dur-fast);
+}
+.pag-btn:hover:not(.disabled) { border-color: var(--primary); background: var(--primary); color: #fff; }
+.pag-btn.disabled { opacity: .35; cursor: not-allowed; }
+.pag-num {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all var(--dur-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pag-num:hover { border-color: var(--primary); color: var(--primary); }
+.pag-num.active { background: var(--primary); border-color: var(--primary); color: #fff; }
 
 @media (max-width: 1024px) {
   .nc-featured { grid-template-columns: 1fr 1fr; min-height: 280px; }

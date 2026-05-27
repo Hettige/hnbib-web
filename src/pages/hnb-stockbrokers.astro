@@ -41,7 +41,7 @@ const articles = await getArticles({ limit: 3 });
             <div><div class="feat-name">Advisory Access</div><div class="feat-desc">Dedicated broker for HNW and institutional clients.</div></div>
           </div>
           <div style="margin-top:var(--sp-m);display:flex;gap:12px">
-            <a href="mailto:info@hnbib.lk" class="btn-primary">Open Account →</a>
+            <a href={`${base}contact-us/`} class="btn-primary">Open Account →</a>
             <a href={`${base}news/`} class="btn-ghost">View Research</a>
           </div>
         </div>
@@ -59,13 +59,33 @@ const articles = await getArticles({ limit: 3 });
 
 <!-- What we offer -->
 <section class="section-host" data-section-id="s2-services" data-section-label="Services">
-  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Simple">
+  <div class="variant section-toggle-active" data-variant="C" data-variant-label="Ambitious">
     <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
-      <div class="section-header reveal"><div class="section-eyebrow">What We Offer</div><h2 class="section-h2">Research. Advisory. Execution.</h2></div>
-      <div class="grid-3">
-        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Equity Research</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">In-house analyst coverage of CSE-listed companies — sector reports, company updates, and buy/sell recommendations.</div></div>
-        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Online Trading</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">Execute on the CSE through our digital platform with real-time quotes, order management, and portfolio tracking.</div></div>
-        <div class="card card-p reveal"><div style="font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px">Advisory Brokerage</div><div style="font-size:13px;color:var(--ink-2);line-height:1.55">A dedicated broker for HNW and institutional clients — personalised strategy, block trades, and discretionary execution.</div></div>
+      <div class="section-header reveal"><div class="section-eyebrow">What We Offer</div><h2 class="section-h2">Research-led. Advisor-backed. Execution-ready.</h2></div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:var(--sp-m) 0;border-bottom:1px solid var(--line)" class="reveal">
+          <div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink)">Equity Research</div>
+            <div style="font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.55">In-house analyst coverage spanning banking, telecoms, consumer, healthcare, and diversified sectors.</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--line)">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:8px">Latest note</div>
+            <div style="font-size:15px;font-weight:700;color:var(--ink)">CSE Banks Sector — Q1 2026 Review</div>
+            <div style="font-size:12px;color:var(--ink-3);margin-top:4px">15 May 2026</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:var(--sp-m) 0" class="reveal">
+          <div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink)">Online Trading Platform</div>
+            <div style="font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.55">Real-time CSE access — quotes, order management, portfolio, and settlement tracking — web and mobile.</div>
+            <a href={`${base}contact-us/`} class="btn-primary" style="margin-top:16px;display:inline-block">Open Account →</a>
+          </div>
+          <div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink)">Advisory Brokerage</div>
+            <div style="font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.55">Dedicated broker for HNW and institutional clients. Block trades, personalised strategy, IPO priority access.</div>
+            <a href={`${base}contact-us/`} class="btn-ghost" style="margin-top:16px;display:inline-block">Speak to an Advisor</a>
+          </div>
+        </div>
       </div>
     </div></div>
   </div>
@@ -105,8 +125,8 @@ const articles = await getArticles({ limit: 3 });
   <h2 class="cta-final-h2 reveal">Ready to trade the CSE?</h2>
   <p class="cta-final-sub reveal">Open a stockbroking account and access research-driven execution with HNB Investment Bank.</p>
   <div class="cta-final-btns reveal">
-    <a href="mailto:info@hnbib.lk" class="btn-white">Open Account</a>
-    <a href="mailto:info@hnbib.lk" class="btn-ghost-white">Speak to a Broker →</a>
+    <a href={`${base}contact-us/`} class="btn-white">Open Account</a>
+    <a href={`${base}contact-us/`} class="btn-ghost-white">Speak to a Broker →</a>
   </div>
   <div class="cta-trust reveal"><span>CSE Full Member</span><span class="dot">·</span><span>Research-Led</span><span class="dot">·</span><span>Est. 1992</span></div>
 </div></div>

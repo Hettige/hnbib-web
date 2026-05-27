@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getRates, getArticles, getPartners, getSiteSettings, formatDate, imgUrl } from '../lib/strapi';
+import { getRates, getArticles, getPartners, formatDate, imgUrl } from '../lib/strapi';
 
 const base = import.meta.env.BASE_URL;
 
-const [rates, articles, partners, settings] = await Promise.all([
+const [rates, articles, partners] = await Promise.all([
   getRates(),
   getArticles({ limit: 5 }),
   getPartners(),
-  getSiteSettings(),
 ]);
 
 const featuredArticle = articles[0] ?? null;
@@ -208,7 +207,7 @@ const repoRate   = rates.find(r => r.instrument === 'Repo');
             <p class="section-lead reveal">Whether you are building a trading portfolio, issuing a corporate bond, or seeking acquisition advisory — we bring depth, reach, and three decades of market trust to every mandate.</p>
             <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:var(--sp-s)" class="reveal">
               <a href={`${base}hnb-stockbrokers/`} class="btn-primary">Open an Account →</a>
-              <a href={`mailto:${settings?.email ?? 'info@hnbib.lk'}`} class="btn-ghost">Talk to an Advisor</a>
+              <a href={`${base}contact-us/`} class="btn-ghost">Talk to an Advisor</a>
             </div>
           </div>
           <div class="solution-features reveal-group">
@@ -430,12 +429,9 @@ const repoRate   = rates.find(r => r.instrument === 'Repo');
       <div class="partners-inner">
         <div class="partners-label reveal">Trusted by Sri Lanka's leading businesses</div>
         <div class="partners-grid reveal-group">
-          {partners.length > 0 ? partners.map(p => (
+          {partners.length > 0 && partners.every(p => p.logo) ? partners.map(p => (
             <div class="partner-logo">
-              {p.logo
-                ? <img src={imgUrl(p.logo, 'thumbnail')} alt={p.name} loading="lazy" />
-                : <span style="color:oklch(1 0 0/.55);font-size:0.85rem;font-weight:600">{p.name}</span>
-              }
+              <img src={imgUrl(p.logo!, 'thumbnail')} alt={p.name} loading="lazy" />
             </div>
           )) : (
             <>
@@ -450,6 +446,7 @@ const repoRate   = rates.find(r => r.instrument === 'Repo');
               <div class="partner-logo"><img src={`${base}assets/images/partner-logos/HPL_Logo.png`} alt="HPL" loading="lazy" /></div>
               <div class="partner-logo"><img src={`${base}assets/images/partner-logos/AsianAlliancelogo-new3-1-e1750417612245.jpg`} alt="Asian Alliance Insurance" loading="lazy" /></div>
               <div class="partner-logo"><img src={`${base}assets/images/partner-logos/Teejay_Lanka_logo-e1750668191871.jpg`} alt="Teejay Lanka" loading="lazy" /></div>
+              <div class="partner-logo"><img src={`${base}assets/images/partner-logos/PAN_ASIA_BANK_LOGO_-_The_Truly_Sri_Lankan_ank-1024x1024.jpg`} alt="Pan Asia Bank" loading="lazy" /></div>
             </>
           )}
         </div>
@@ -558,7 +555,7 @@ const repoRate   = rates.find(r => r.instrument === 'Repo');
         <p class="cta-a-sub reveal">Open an account with HNB Investment Bank and access Sri Lanka's capital markets with the backing of a 30-year institution and the Hatton National Bank Group.</p>
         <div class="cta-a-btns reveal">
           <a href={`${base}hnb-stockbrokers/`} class="btn-white">Open an Account →</a>
-          <a href={`mailto:${settings?.email ?? 'info@hnbib.lk'}`} class="btn-ghost-white">Speak to an Advisor</a>
+          <a href={`${base}contact-us/`} class="btn-ghost-white">Speak to an Advisor</a>
         </div>
         <div class="cta-trust-line reveal">
           <span>CSE Full Member</span><span class="trust-dot">·</span>

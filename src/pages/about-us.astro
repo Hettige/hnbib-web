@@ -1,223 +1,434 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSiteSettings, getTeamMembers, imgUrl } from '../lib/strapi';
-
-const base     = import.meta.env.BASE_URL;
-const settings = await getSiteSettings();
-const members  = await getTeamMembers();
-const exec     = members.filter(m => m.department === 'Executive').slice(0, 3);
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
-  title="About Us - HNB Investment Bank"
-  description="HNB Investment Bank Limited is Sri Lanka's premier full-service investment bank, established in 1992 and regulated by the SEC and CBSL."
+  title="About Us — HNB Investment Bank"
+  description="Discover HNB Investment Bank — Sri Lanka's leading full-service investment bank. Learn about our leadership, values, 30-year track record, and capital markets expertise."
 >
-  <!-- Hero -->
-  <div id="site-header" class="site-header page-hero-about">
-    <div class="hero-overlay"></div>
-    <div class="section-inner page-hero-inner" style="position:relative;z-index:2">
-      <p class="overline">About HNBIB</p>
-      <h1>Sri Lanka's Premier Investment Bank</h1>
-      <p class="hero-sub">
-        Established in {settings?.established ?? 1992}, HNB Investment Bank has built Sri Lanka's most trusted
-        full-service investment banking franchise across four business lines.
-      </p>
+
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-header-eyebrow">About HNB Investment Bank</div>
+  <h1 class="page-header-h1">Sri Lanka's full-service investment bank since 1992.</h1>
+  <p class="page-header-lead">A subsidiary of Hatton National Bank PLC — Sri Lanka's second-largest listed bank. We operate across stockbroking, primary dealership, corporate finance, and fund management.</p>
+</div></div>
+
+<main class="page-body">
+
+<!-- S1: WHO WE ARE — Image + Text -->
+<section class="section-host" data-section-id="s1-who" data-section-label="Who We Are">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Image Split">
+    <div class="about-split">
+      <div class="about-split-img reveal-left">
+        <img src={`${base}assets/images/hero/hnbib-cc-1024x808.webp`} alt="HNB Investment Bank — Sri Lanka's capital markets leader" loading="lazy">
+      </div>
+      <div class="about-split-content">
+        <div class="section-eyebrow reveal">Who We Are</div>
+        <h2 class="section-h2 reveal">Acuity Partners heritage. HNB Group strength.</h2>
+        <p class="section-lead reveal" style="max-width:100%">HNB Investment Bank is the capital markets arm of Hatton National Bank PLC. Evolved from the renowned Acuity Partners brand — a joint venture with Deutsche Bank — we have been at the heart of Sri Lanka's financial markets for over three decades.</p>
+        <p style="font-size:14px;line-height:1.7;color:var(--ink-2);max-width:560px" class="reveal">We hold three critical market licences: CSE Full Member (stockbroking), CBSL Primary Dealer (government securities), and SEC Licensed Fund Manager. Together these allow us to serve the full breadth of Sri Lanka's capital market needs — from a retail investor's first trade to a landmark LKR 32 billion corporate transaction.</p>
+        <div class="about-split-stats reveal-group">
+          <div class="about-stat">
+            <div class="about-stat-val" data-count-to="200" data-count-suffix="Bn+" data-count-prefix="LKR ">LKR 200Bn+</div>
+            <div class="about-stat-lbl">Capital raised across equity &amp; debt</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val" data-count-to="33" data-count-suffix=" years">33 years</div>
+            <div class="about-stat-lbl">Sri Lanka market leadership</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val" data-count-to="300" data-count-suffix="x">300x</div>
+            <div class="about-stat-lbl">Record IPO oversubscription</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val" data-count-to="32" data-count-suffix="Bn" data-count-prefix="LKR ">LKR 32Bn</div>
+            <div class="about-stat-lbl">Assets under management</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- Story -->
-  <section class="section-pad">
-    <div class="section-inner about-split">
-      <div>
-        <p class="section-eyebrow">Our Story</p>
-        <h2>Three Decades of Capital Markets Excellence</h2>
-        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:var(--sp-m)">
-          Founded in {settings?.established ?? 1992}, HNB Investment Bank Limited was established to bring institutional-grade
-          investment banking services to Sri Lanka's developing capital markets.
-          Over three decades, we have grown into a full-service firm spanning stockbroking, securities, corporate finance, and private equity.
-        </p>
-        <p style="color:var(--text-muted);line-height:1.9;margin-bottom:var(--sp-l)">
-          As part of the HNB Group — one of Sri Lanka's largest licensed commercial banks —
-          we combine deep capital markets expertise with the reach and credibility of a systemically important financial institution.
-        </p>
-        <div class="about-badges">
-          <div class="about-badge">
-            <span class="ab-num">{settings?.cseStatus ?? 'CSE Full Member'}</span>
+<!-- S2: BOARD OF DIRECTORS -->
+<section class="section-host" data-section-id="s2-board" data-section-label="Board">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Photo Cards">
+    <div class="section-pad" style="background:var(--bg)"><div class="section-inner">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">Leadership</div>
+        <h2 class="section-h2">Board of Directors</h2>
+        <p class="section-lead">Our board brings together capital markets expertise, banking leadership, and corporate governance experience from across Sri Lanka and the region.</p>
+      </div>
+      <div class="team-grid reveal-group" style="margin-top:var(--sp-l)">
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Ray-1024x819.webp`} alt="Ray Abeywardena" loading="lazy">
           </div>
-          <div class="about-badge">
-            <span class="ab-num">{settings?.cbslStatus ?? 'CBSL Primary Dealer'}</span>
+          <div class="leader-body">
+            <div class="leader-name">Ray Abeywardena</div>
+            <div class="leader-title">Group Chief Executive Officer</div>
           </div>
-          <div class="about-badge">
-            <span class="ab-num">SEC Regulated</span>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Damith-1024x819.webp`} alt="Damith Pallewatte" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Damith Pallewatte</div>
+            <div class="leader-title">Director / Deputy CEO</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Sanjay-1024x819.webp`} alt="Sanjay Wijemanne" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Sanjay Wijemanne</div>
+            <div class="leader-title">Director</div>
+          </div>
+        </div>
+        <div class="leader-card" style="background:var(--bg-2);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:290px;gap:12px;padding:var(--sp-m)">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink-3)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div style="text-align:center">
+            <div class="leader-name">David Nigel Bartholomeusz</div>
+            <div class="leader-title">Independent Non-Executive Director</div>
           </div>
         </div>
       </div>
-      <div class="about-img-wrap">
-        <img
-          src="https://dazzling-virtue-5cf576a094.media.strapiapp.com/business_people_board_room_meeting_53876_138090_a5c6a97eb0.jpg"
-          alt="HNB Investment Bank team"
-        />
-      </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <!-- Milestones -->
-  <section class="section-pad" style="background:oklch(0.97 0.008 242)">
-    <div class="section-inner">
-      <p class="section-eyebrow">Key Milestones</p>
-      <h2 class="section-title">Our Journey</h2>
-      <div class="milestones">
-        {[
-          { year: '1992', event: 'Incorporated as Lanka Securities Limited and appointed as a CBSL Primary Dealer.' },
-          { year: '1996', event: 'Lanka Ventures established as one of Sri Lanka\'s first dedicated private equity managers.' },
-          { year: '2011', event: 'Managed the Union Bank IPO — oversubscribed 300 times on the CSE.' },
-          { year: '2018', event: 'Led one of Sri Lanka\'s largest private debt offerings: Hayleys Rs 7 billion debenture.' },
-          { year: '2022', event: 'Pioneered Sri Lanka\'s first high-yield bond issuance for Fintrex Finance.' },
-          { year: '2024', event: 'Full subscription of Singer Finance LKR 2 billion subordinated debt offering.' },
-        ].map(m => (
-          <div class="milestone">
-            <div class="milestone-year">{m.year}</div>
-            <div class="milestone-line"></div>
-            <div class="milestone-event">{m.event}</div>
+<!-- S3: MANAGEMENT TEAM -->
+<section class="section-host" data-section-id="s3-management" data-section-label="Management">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Photo Cards">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">Executive Team</div>
+        <h2 class="section-h2">Management &amp; Operations</h2>
+        <p class="section-lead">Deep specialists leading each business line — with collective experience spanning decades in Sri Lanka's capital markets, banking, and finance.</p>
+      </div>
+      <div class="team-grid reveal-group" style="margin-top:var(--sp-l)">
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Yaveen-1024x819.webp`} alt="Yaveen Amaratunga" loading="lazy">
           </div>
-        ))}
+          <div class="leader-body">
+            <div class="leader-name">Yaveen Amaratunga</div>
+            <div class="leader-title">CEO — HNB Stockbrokers</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Prashan-1024x819.webp`} alt="Prashan de Visser" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Prashan de Visser</div>
+            <div class="leader-title">CEO — HNB Securities</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Shehan-1024x819.webp`} alt="Shehan Jayawardena" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Shehan Jayawardena</div>
+            <div class="leader-title">Head of Corporate Finance</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Nayana-1024x819.webp`} alt="Nayana Karunaratne" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Nayana Karunaratne</div>
+            <div class="leader-title">Head of Research</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Mayanthi-1024x819.webp`} alt="Mayanthi Perera" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Mayanthi Perera</div>
+            <div class="leader-title">Chief Financial Officer</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Sanjeewa-W-1024x819.webp`} alt="Sanjeewa Weerasinghe" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Sanjeewa Weerasinghe</div>
+            <div class="leader-title">Head of Operations</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Andrea-1024x819.webp`} alt="Andrea Fernando" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Andrea Fernando</div>
+            <div class="leader-title">Head of HR &amp; Administration</div>
+          </div>
+        </div>
+        <div class="leader-card">
+          <div class="leader-photo-wrap">
+            <img src={`${base}assets/images/team/Shehan-Cooray-1024x819.webp`} alt="Shehan Cooray" loading="lazy">
+          </div>
+          <div class="leader-body">
+            <div class="leader-name">Shehan Cooray</div>
+            <div class="leader-title">Head of Legal &amp; Compliance</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <!-- Executive team preview -->
-  {exec.length > 0 && (
-    <section class="section-pad">
-      <div class="section-inner">
-        <p class="section-eyebrow">Leadership</p>
-        <h2 class="section-title">Executive Team</h2>
-        <div class="exec-grid">
-          {exec.map(m => (
-            <div class="exec-card">
-              <div class="exec-photo">
-                {m.photo
-                  ? <img src={imgUrl(m.photo, 'medium')} alt={m.name} loading="lazy" />
-                  : <div class="exec-placeholder"><span>{m.name.split(' ').map(n => n[0]).join('').slice(0,2)}</span></div>
-                }
-              </div>
-              <h3 class="exec-name">{m.name}</h3>
-              <p class="exec-role">{m.role}</p>
+<!-- S4: CORE VALUES -->
+<section class="section-host" data-section-id="s4-values" data-section-label="Values">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Icon Cards">
+    <div class="section-pad" style="background:var(--bg)"><div class="section-inner">
+      <div class="section-header reveal" style="text-align:center;max-width:560px;margin-left:auto;margin-right:auto">
+        <div class="section-eyebrow">Our Core Values</div>
+        <h2 class="section-h2">What drives us every day.</h2>
+        <p class="section-lead" style="max-width:100%">Five principles that guide every client relationship, every transaction, and every decision we make in Sri Lanka's capital markets.</p>
+      </div>
+      <div class="values-grid reveal-group" style="margin-top:var(--sp-l)">
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="value-name">Integrity</div>
+          <div class="value-desc">Transparent, ethical conduct in every client interaction and market transaction — without exception.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="value-name">Innovation</div>
+          <div class="value-desc">Pioneering Sri Lanka's capital markets — from the nation's first GDR to its first green bond and first ETF.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="value-name">Collaboration</div>
+          <div class="value-desc">Working alongside clients, regulators, and the HNB Group to unlock the best outcomes for Sri Lanka's economy.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <div class="value-name">Stability</div>
+          <div class="value-desc">Backed by Hatton National Bank Group, we bring institutional resilience and continuity to every mandate.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="value-name">Excellence</div>
+          <div class="value-desc">Committed to the highest standard in research, execution, and advice — consistently, across every business line.</div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- S5: AWARDS & RECOGNITION -->
+<section class="section-host" data-section-id="s5-awards" data-section-label="Awards">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Award Cards">
+    <div class="section-pad" style="background:var(--bg-2)"><div class="section-inner">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">Awards &amp; Recognition</div>
+        <h2 class="section-h2">Recognised for excellence.</h2>
+        <p class="section-lead">Independent recognition of our standing in Sri Lanka's capital markets and investment banking community.</p>
+      </div>
+      <div class="awards-grid reveal-group" style="margin-top:var(--sp-l)">
+        <div class="award-card">
+          <div class="award-badge" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div class="award-year">LMD · 2023</div>
+            <div class="award-name">Most Respected Entities in Sri Lanka — Sector Winner</div>
+            <div class="award-body">Recognised by LMD magazine as the most respected entity in Sri Lanka's investment banking sector — a reflection of our three-decade track record and institutional integrity.</div>
+          </div>
+        </div>
+        <div class="award-card">
+          <div class="award-badge" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/><path d="M12 2L9.05 8.26 2 9.27l5 4.87-1.18 6.88L12 17.77l6.18 3.25L17 14.14l5-4.87-7.05-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <div class="award-year">Brand Finance · 2023</div>
+            <div class="award-name">Top Hundred Brands in Sri Lanka</div>
+            <div class="award-body">Ranked among Sri Lanka's top 100 most valuable brands by Brand Finance — recognising the strength and recognition of the HNB Investment Bank name across the island's financial community.</div>
+          </div>
+        </div>
+        <div class="award-card">
+          <div class="award-badge" style="background:oklch(0.42 0.14 242 / 0.10);color:var(--primary)" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div>
+            <div class="award-year">CBSL · Since 2000</div>
+            <div class="award-name">Appointed Primary Dealer — Central Bank of Sri Lanka</div>
+            <div class="award-body">One of only a select number of institutions appointed as a Primary Dealer by the Central Bank of Sri Lanka — giving us direct auction access for T-Bills and T-Bonds since 2000.</div>
+          </div>
+        </div>
+        <div class="award-card">
+          <div class="award-badge" style="background:oklch(0.42 0.14 242 / 0.10);color:var(--primary)" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <div>
+            <div class="award-year">CSE · Licensed Member</div>
+            <div class="award-name">Colombo Stock Exchange — Full Trading Member</div>
+            <div class="award-body">Authorised as a full member of the Colombo Stock Exchange, enabling direct market access, order execution, and settlement services for all CSE-listed securities on behalf of our clients.</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- S6: MILESTONES TIMELINE -->
+<section class="section-host" data-section-id="s6-milestones" data-section-label="Milestones">
+  <div class="variant section-toggle-active" data-variant="A" data-variant-label="Timeline">
+    <div class="section-pad" style="background:var(--bg)"><div class="section-inner">
+      <div class="content-grid-split" style="align-items:start">
+        <div>
+          <div class="section-eyebrow reveal">Our History</div>
+          <h2 class="section-h2 reveal">Three decades of capital market firsts.</h2>
+          <p class="section-lead reveal">From Sri Lanka's first international equity offering to its first green bond, first ETF, and first high-yield bond — we have consistently pioneered what's possible in Sri Lanka's financial markets.</p>
+          <div style="margin-top:var(--sp-l)" class="reveal">
+            <div style="background:var(--primary);border-radius:var(--radius);padding:var(--sp-m);display:flex;flex-direction:column;gap:12px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:oklch(1 0 0/.50)">Landmark Transaction</div>
+              <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.3">Sri Lanka Telecom — LKR 32 Billion</div>
+              <div style="font-size:13px;color:oklch(1 0 0/.65)">The largest single transaction on the Colombo Stock Exchange. A strategic stake sale that redefined the scale of what's possible in Sri Lanka's capital markets.</div>
             </div>
-          ))}
-        </div>
-        <div style="text-align:center;margin-top:var(--sp-xl)">
-          <a href={`${base}team/`} class="btn btn-outline">Meet the Full Team</a>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Regulatory -->
-  <section class="section-pad" style="background:oklch(0.20 0.08 242);color:#fff">
-    <div class="section-inner">
-      <p class="section-eyebrow" style="color:oklch(1 0 0/.55)">Regulatory Standing</p>
-      <h2 style="color:#fff">Regulated, Licensed, and Accountable</h2>
-      <div class="reg-grid">
-        {[
-          { body: 'Securities & Exchange Commission', role: 'Primary Regulator', desc: 'Fully licensed and regulated by the SEC of Sri Lanka, adhering to the highest standards of capital market conduct.' },
-          { body: 'Central Bank of Sri Lanka', role: 'Primary Dealer Appointment', desc: 'One of a select group of institutions appointed as a CBSL Primary Dealer — participant in every government securities auction.' },
-          { body: 'Colombo Stock Exchange', role: 'Full Member', desc: 'CSE Full Member with direct access to the exchange, subject to CSE Rules and the SEC Act.' },
-        ].map(reg => (
-          <div class="reg-card">
-            <h3 class="reg-body">{reg.body}</h3>
-            <p class="reg-role">{reg.role}</p>
-            <p class="reg-desc">{reg.desc}</p>
           </div>
-        ))}
+        </div>
+        <div class="milestones-track">
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">92</div>
+            <div>
+              <div class="milestone-year">1992</div>
+              <div class="milestone-text">Founded as capital markets arm of HNB Group</div>
+              <div class="milestone-sub">Operating under the Acuity Partners joint venture with Deutsche Bank</div>
+            </div>
+          </div>
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">00</div>
+            <div>
+              <div class="milestone-year">2000</div>
+              <div class="milestone-text">Appointed CBSL Primary Dealer</div>
+              <div class="milestone-sub">Central Bank of Sri Lanka confers Primary Dealer status for government securities</div>
+            </div>
+          </div>
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">10</div>
+            <div>
+              <div class="milestone-year">2010s</div>
+              <div class="milestone-text">Sri Lanka's first GDR — HNB Bank international equity offering</div>
+              <div class="milestone-sub">The first Sri Lankan bank to issue Global Depositary Receipts on an international exchange</div>
+            </div>
+          </div>
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">18</div>
+            <div>
+              <div class="milestone-year">2018</div>
+              <div class="milestone-text">Sri Lanka's first Green Bond listed on the CSE</div>
+              <div class="milestone-sub">Pioneered sustainable finance instruments in the domestic capital market</div>
+            </div>
+          </div>
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">22</div>
+            <div>
+              <div class="milestone-year">2022</div>
+              <div class="milestone-text">Sri Lanka's first high-yield bond — Fintrex Finance</div>
+              <div class="milestone-sub">Opened a new asset class for fixed income investors in the post-restructuring era</div>
+            </div>
+          </div>
+          <div class="milestone-item reveal">
+            <div class="milestone-dot">23</div>
+            <div>
+              <div class="milestone-year">2023</div>
+              <div class="milestone-text">LMD Most Respected Entity — Sector Winner</div>
+              <div class="milestone-sub">Recognised as the most respected investment banking entity in Sri Lanka</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </div></div>
+  </div>
+</section>
 
-  <!-- Contact / CTA -->
-  <section class="section-pad cta-final">
-    <div class="cta-final-inner">
-      <h2 class="section-title">Get in Touch</h2>
-      <p class="cta-final-sub">
-        {settings?.address}
-      </p>
-      <div class="cta-actions">
-        <a href={`mailto:${settings?.email ?? 'info@hnbib.lk'}`} class="btn btn-primary btn-lg">
-          {settings?.email ?? 'info@hnbib.lk'}
-        </a>
-        <a href={`tel:${settings?.phone ?? '+94112490900'}`} class="btn btn-outline btn-outline-light btn-lg">
-          {settings?.phone ?? '+94 11 2 490 900'}
-        </a>
-      </div>
+<!-- CTA -->
+<div class="cta-a cta-a-mesh">
+  <div class="cta-a-inner">
+    <h2 class="cta-a-h2 reveal">Start your investment journey with us.</h2>
+    <p class="cta-a-sub reveal">Open an account or speak to an advisor — backed by 30 years of Sri Lanka's capital market experience and the Hatton National Bank Group.</p>
+    <div class="cta-a-btns reveal">
+      <a href={`${base}hnb-stockbrokers/`} class="btn-white">Open a Trading Account →</a>
+      <a href={`${base}contact-us/`} class="btn-ghost-white">Speak to an Advisor</a>
     </div>
-  </section>
+    <div class="cta-trust-line reveal">
+      <span>CSE Full Member</span><span class="trust-dot">·</span>
+      <span>CBSL Primary Dealer</span><span class="trust-dot">·</span>
+      <span>SEC Licensed</span><span class="trust-dot">·</span>
+      <span>Est. 1992</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
 </BaseLayout>
 
 <style>
-.page-hero-about {
-  position: relative;
-  background: linear-gradient(135deg, oklch(0.20 0.12 242), oklch(0.36 0.14 252));
-  padding: var(--sp-3xl) 0 var(--sp-2xl);
-  color: #fff;
-  overflow: hidden;
-}
-.page-hero-about .hero-overlay {
-  position: absolute; inset: 0;
-  background: url('https://dazzling-virtue-5cf576a094.media.strapiapp.com/hnbib_cc_1024x808_7a4264ba6d.webp') center/cover no-repeat;
-  opacity: .15;
-}
-.page-hero-inner { max-width: 640px; }
-.page-hero-about .overline { color: oklch(1 0 0 / .60); }
-.page-hero-about h1 { color: #fff; margin: var(--sp-xs) 0 var(--sp-m); }
-.page-hero-about .hero-sub { color: oklch(1 0 0 / .75); }
+/* Team cards */
+.team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.leader-card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; transition:box-shadow var(--dur-mid) var(--ease-out), transform var(--dur-mid) var(--ease-out); }
+.leader-card:hover { box-shadow:0 8px 28px oklch(0.42 0.14 242 / 0.12); transform:translateY(-3px); }
+.leader-photo-wrap { height:220px; overflow:hidden; background:var(--bg-2); }
+.leader-photo-wrap img { width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform .6s var(--ease-out); }
+.leader-card:hover .leader-photo-wrap img { transform:scale(1.04); }
+.leader-body { padding:16px; }
+.leader-name { font-size:15px; font-weight:700; color:var(--ink); }
+.leader-title { font-size:12px; color:var(--ink-3); margin-top:3px; line-height:1.4; }
 
-/* About split */
-.about-split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2xl); align-items: center; }
-.about-split h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); color: var(--primary); margin: var(--sp-s) 0 var(--sp-l); }
-.about-badges { display: flex; gap: var(--sp-s); flex-wrap: wrap; }
-.about-badge { background: var(--bg); border: 1px solid oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .15); border-radius: 8px; padding: var(--sp-s) var(--sp-m); }
-.ab-num { font-size: 0.82rem; font-weight: 600; color: var(--primary); }
-.about-img-wrap { border-radius: 16px; overflow: hidden; }
-.about-img-wrap img { width: 100%; display: block; object-fit: cover; }
+/* Core values */
+.values-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+.value-card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:28px 20px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px; transition:box-shadow var(--dur-mid), transform var(--dur-mid), border-color var(--dur-mid); }
+.value-card:hover { box-shadow:0 8px 24px oklch(0.42 0.14 242 / 0.10); transform:translateY(-3px); border-color:var(--primary); }
+.value-icon { width:52px; height:52px; background:oklch(0.42 0.14 242 / 0.08); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--primary); transition:background var(--dur-mid), color var(--dur-mid); }
+.value-card:hover .value-icon { background:var(--primary); color:#fff; }
+.value-name { font-size:15px; font-weight:700; color:var(--ink); }
+.value-desc { font-size:12px; color:var(--ink-2); line-height:1.55; }
 
-/* Milestones */
-.milestones { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
-.milestone { display: flex; flex-direction: column; }
-.milestone-year { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-.milestone-line { width: 40px; height: 3px; background: var(--accent); margin: var(--sp-s) 0; }
-.milestone-event { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+/* Awards */
+.awards-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.award-card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:var(--sp-m); display:flex; gap:20px; align-items:flex-start; transition:box-shadow var(--dur-mid), transform var(--dur-mid); }
+.award-card:hover { box-shadow:0 6px 20px oklch(0.42 0.14 242 / 0.10); transform:translateY(-2px); }
+.award-badge { width:56px; height:56px; border-radius:12px; background:oklch(0.62 0.16 141 / 0.10); display:flex; align-items:center; justify-content:center; color:var(--accent); flex-shrink:0; }
+.award-year { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--primary); }
+.award-name { font-size:16px; font-weight:700; color:var(--ink); margin-top:4px; line-height:1.3; }
+.award-body { font-size:13px; color:var(--ink-2); margin-top:4px; line-height:1.55; }
 
-/* Exec grid */
-.exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
-.exec-card { text-align: center; }
-.exec-photo { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 0 auto var(--sp-m); border: 3px solid oklch(var(--primary-l) var(--primary-c) var(--primary-h) / .15); }
-.exec-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.exec-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), oklch(0.55 0.14 260)); display: flex; align-items: center; justify-content: center; }
-.exec-placeholder span { color: #fff; font-size: 2rem; font-weight: 700; }
-.exec-name { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0 0 4px; }
-.exec-role { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+/* Timeline milestones */
+.milestones-track { position:relative; padding:var(--sp-m) 0; }
+.milestones-track::before { content:''; position:absolute; left:24px; top:0; bottom:0; width:2px; background:var(--line); }
+.milestone-item { display:grid; grid-template-columns:48px 1fr; gap:var(--sp-m); margin-bottom:var(--sp-m); align-items:start; position:relative; }
+.milestone-dot { width:48px; height:48px; border-radius:50%; background:var(--card); border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--primary); flex-shrink:0; z-index:1; position:relative; transition:border-color var(--dur-mid), background var(--dur-mid), color var(--dur-mid); }
+.milestone-item:hover .milestone-dot { border-color:var(--primary); background:var(--primary); color:#fff; }
+.milestone-year { font-size:11px; font-weight:700; color:var(--primary); letter-spacing:.08em; }
+.milestone-text { font-size:14px; font-weight:600; color:var(--ink); line-height:1.4; }
+.milestone-sub { font-size:12px; color:var(--ink-2); margin-top:2px; }
 
-/* Regulatory */
-.reg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-l); margin-top: var(--sp-xl); }
-.reg-card { border: 1px solid oklch(1 0 0 / .15); border-radius: 12px; padding: var(--sp-l); }
-.reg-body { font-size: 0.96rem; font-weight: 600; color: #fff; margin: 0 0 var(--sp-xs); }
-.reg-role { font-size: 0.78rem; color: var(--accent); font-weight: 600; margin: 0 0 var(--sp-m); }
-.reg-desc { font-size: 0.86rem; color: oklch(1 0 0 / .65); line-height: 1.7; margin: 0; }
-
-/* CTA */
-.cta-final { background: linear-gradient(135deg, var(--primary), oklch(0.32 0.18 270)); text-align: center; color: #fff; }
-.cta-final-inner { max-width: 700px; margin: 0 auto; padding: 0 var(--sp-m); }
-.cta-final .section-title { color: #fff; }
-.cta-final-sub { color: oklch(1 0 0 / .80); margin: 0 auto var(--sp-xl); max-width: 520px; }
-.cta-actions { display: flex; gap: var(--sp-m); justify-content: center; flex-wrap: wrap; }
-
-@media (max-width: 900px) {
-  .about-split  { grid-template-columns: 1fr; }
-  .milestones   { grid-template-columns: repeat(2, 1fr); }
-  .exec-grid    { grid-template-columns: repeat(3, 1fr); }
-  .reg-grid     { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .milestones   { grid-template-columns: 1fr; }
-  .exec-grid    { grid-template-columns: repeat(2, 1fr); }
-}
+@media(max-width:1024px) { .team-grid { grid-template-columns:1fr 1fr 1fr; } .values-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:768px) { .team-grid { grid-template-columns:1fr 1fr; } .awards-grid { grid-template-columns:1fr; } .values-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:480px) { .team-grid { grid-template-columns:1fr; } .values-grid { grid-template-columns:1fr; } }
 </style>
