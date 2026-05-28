@@ -94,8 +94,8 @@ const base = import.meta.env.BASE_URL;
               Thank you! Your message has been received. We'll be in touch within 1 business day.
             </div>
             <div class="form-error-banner" id="form-error-banner" role="alert" aria-live="polite" hidden>
-              Something went wrong. Please try again or email us at
-              <a href="mailto:hetti@hnbib.test.lk">hetti@hnbib.test.lk</a>.
+              Something went wrong — <span id="form-error-detail">please try again.</span>
+              Email us at <a href="mailto:himansa.hettige@gmail.com">himansa.hettige@gmail.com</a>.
             </div>
 
             <button type="submit" class="btn-primary" id="cf-submit"
@@ -121,7 +121,7 @@ const base = import.meta.env.BASE_URL;
             <div class="info-icon">✉️</div>
             <div class="info-text">
               <h4>General Inquiries</h4>
-              <a href="mailto:hetti@hnbib.test.lk">hetti@hnbib.test.lk</a>
+              <a href="mailto:himansa.hettige@gmail.com">himansa.hettige@gmail.com</a>
             </div>
           </div>
           <div class="info-item">
@@ -244,9 +244,15 @@ const base = import.meta.env.BASE_URL;
     btn.disabled    = true;
     btn.textContent = 'Sending…';
 
+    // Build JSON payload from form fields
+    var fd = new FormData(form);
+    var payload = {};
+    fd.forEach(function (val, key) { payload[key] = val; });
+
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      body: new FormData(form),
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
     })
       .then(function (r) { return r.json(); })
       .then(function (json) {
@@ -255,10 +261,16 @@ const base = import.meta.env.BASE_URL;
           success.hidden = false;
           success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
+          var detail = document.getElementById('form-error-detail');
+          if (detail) detail.textContent = json.message || 'please try again.';
           throw new Error(json.message || 'failed');
         }
       })
-      .catch(function () {
+      .catch(function (err) {
+        var detail = document.getElementById('form-error-detail');
+        if (detail && err && err.message && err.message !== 'failed') {
+          detail.textContent = err.message;
+        }
         errBan.hidden = false;
       })
       .finally(function () {
