@@ -23,16 +23,12 @@ const base = import.meta.env.BASE_URL;
       <div class="contact-grid reveal">
         <div>
           <h2 style="margin-bottom:1.5rem;">Send Us a Message</h2>
-          <!-- ⚠️  Replace YOUR_WEB3FORMS_KEY_HERE:
-               1. Go to https://web3forms.com
-               2. Enter hetti@hnbib.test.lk  →  they email you a free access key
-               3. Paste it below in the access_key value -->
           <form class="contact-form" id="contact-form"
                 action="https://api.web3forms.com/submit" method="POST"
                 novalidate>
 
             <!-- Web3Forms config -->
-            <input type="hidden" name="access_key"  value="YOUR_WEB3FORMS_KEY_HERE">
+            <input type="hidden" name="access_key"  value="1daa864c-c030-4cb5-84f4-786a28313120">
             <input type="hidden" name="subject"      value="New Enquiry — HNB Investment Bank Website">
             <input type="hidden" name="from_name"    value="HNBIB Contact Form">
             <!-- Honeypot — catches bots, invisible to real users -->
