@@ -80,7 +80,23 @@ const body = article.body ?? null;
 </BaseLayout>
 
 <script>
-  // Render Strapi blocks into HTML
+  // ── Security helpers ──────────────────────────────────────────
+  // Escape all CMS-sourced text before inserting into HTML
+  function esc(s: unknown): string {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  // Only allow safe URL schemes — blocks javascript:, data:, vbscript:
+  function safeUrl(url: unknown): string {
+    const u = String(url ?? '').trim();
+    return /^(https?:\/\/|\/|#|mailto:)/i.test(u) ? u : '#';
+  }
+
+  // ── Render Strapi blocks into HTML ────────────────────────────
   const container = document.getElementById('article-content');
   if (container) {
     const blocks = JSON.parse(container.dataset.blocks ?? '[]');
@@ -92,14 +108,20 @@ const body = article.body ?? null;
     switch (block.type) {
       case 'paragraph':
         return `<p>${renderChildren(block.children)}</p>`;
-      case 'heading':
-        return `<h${block.level}>${renderChildren(block.children)}</h${block.level}>`;
-      case 'list':
+      case 'heading': {
+        // Clamp level to 1–6 to prevent tag-name injection
+        const lvl = Math.min(Math.max(parseInt(block.level) || 1, 1), 6);
+        return `<h${lvl}>${renderChildren(block.children)}</h${lvl}>`;
+      }
+      case 'list': {
         const tag = block.format === 'ordered' ? 'ol' : 'ul';
         const items = (block.children ?? []).map((li: any) => `<li>${renderChildren(li.children)}</li>`).join('');
         return `<${tag}>${items}</${tag}>`;
+      }
       case 'image':
-        return block.image?.url ? `<figure><img src="${block.image.url}" alt="${block.image.alternativeText ?? ''}" /></figure>` : '';
+        return block.image?.url
+          ? `<figure><img src="${safeUrl(block.image.url)}" alt="${esc(block.image.alternativeText)}" /></figure>`
+          : '';
       case 'quote':
         return `<blockquote>${renderChildren(block.children)}</blockquote>`;
       default:
@@ -109,8 +131,11 @@ const body = article.body ?? null;
 
   function renderChildren(children: any[]): string {
     return (children ?? []).map((child: any) => {
-      if (child.type === 'link') return `<a href="${child.url}">${renderChildren(child.children)}</a>`;
-      let text = child.text ?? '';
+      if (child.type === 'link') {
+        return `<a href="${safeUrl(child.url)}" rel="noopener noreferrer">${renderChildren(child.children)}</a>`;
+      }
+      // Escape text before wrapping in inline tags
+      let text = esc(child.text);
       if (child.bold)          text = `<strong>${text}</strong>`;
       if (child.italic)        text = `<em>${text}</em>`;
       if (child.underline)     text = `<u>${text}</u>`;
