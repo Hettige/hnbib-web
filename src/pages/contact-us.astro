@@ -61,15 +61,16 @@ const base = import.meta.env.BASE_URL;
             </div>
 
             <div class="form-field">
-              <label for="cf-phone">Phone Number</label>
+              <label for="cf-phone">Phone Number *</label>
               <input type="tel" id="cf-phone" name="phone"
-                     placeholder="+94 77 000 0000" maxlength="20"
+                     placeholder="07XXXXXXXX or +94XXXXXXXXX" required maxlength="15"
                      autocomplete="tel">
+              <span class="field-error" id="err-phone"></span>
             </div>
 
             <div class="form-field">
-              <label for="cf-service">Service Interest</label>
-              <select id="cf-service" name="service">
+              <label for="cf-service">Service Interest *</label>
+              <select id="cf-service" name="service" required>
                 <option value="">Select a service…</option>
                 <option>Equity Brokerage</option>
                 <option>Fixed Income / Securities</option>
@@ -78,14 +79,18 @@ const base = import.meta.env.BASE_URL;
                 <option>Investor Relations</option>
                 <option>Other</option>
               </select>
+              <span class="field-error" id="err-service"></span>
             </div>
 
             <div class="form-field">
               <label for="cf-message">Message *</label>
               <textarea id="cf-message" name="message"
                         placeholder="Tell us how we can help…"
-                        required minlength="10" maxlength="2000"></textarea>
-              <span class="field-error" id="err-message"></span>
+                        required minlength="10"></textarea>
+              <div class="msg-meta">
+                <span class="field-error" id="err-message"></span>
+                <span class="word-count" id="msg-word-count">0 / 200 words</span>
+              </div>
             </div>
 
             <!-- Feedback banners -->
@@ -206,31 +211,126 @@ const base = import.meta.env.BASE_URL;
   var errBan  = document.getElementById('form-error-banner');
   if (!form) return;
 
-  // ── Field-level validation messages ──────────────────────────
+  // ── Button state machine ──────────────────────────────────────
+  function setBtnState(state, msg) {
+    btn.classList.remove('btn-state-sending', 'btn-state-success', 'btn-state-error');
+    if (state === 'sending') {
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      btn.classList.add('btn-state-sending');
+    } else if (state === 'success') {
+      btn.disabled = true;
+      btn.textContent = '✓ Submitted';
+      btn.classList.add('btn-state-success');
+    } else if (state === 'error') {
+      btn.disabled = false;
+      btn.textContent = 'Not submitted — try again';
+      btn.classList.add('btn-state-error');
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    }
+  }
+
+  // ── Word counter ──────────────────────────────────────────────
+  var msgArea  = document.getElementById('cf-message');
+  var wordDisp = document.getElementById('msg-word-count');
+  function countWords(str) {
+    return str.trim() === '' ? 0 : str.trim().split(/\s+/).length;
+  }
+  function updateWordCount() {
+    var n = countWords(msgArea.value);
+    wordDisp.textContent = n + ' / 200 words';
+    wordDisp.classList.toggle('over-limit', n > 200);
+  }
+  if (msgArea) msgArea.addEventListener('input', updateWordCount);
+
+  // ── Custom field validators ───────────────────────────────────
+  var NAME_RE  = /^[A-Za-z\s'\-]+$/;
+  var PHONE_RE = /^(\+94[0-9]{9}|0[0-9]{9})$/;
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   var rules = {
-    'cf-first':   { err: 'err-first',   msg: 'Please enter your first name.' },
-    'cf-last':    { err: 'err-last',    msg: 'Please enter your last name.' },
-    'cf-email':   { err: 'err-email',   msg: 'Please enter a valid email address.' },
-    'cf-message': { err: 'err-message', msg: 'Please enter a message (min 10 characters).' },
+    'cf-first': {
+      err: 'err-first',
+      check: function (el) {
+        var v = el.value.trim();
+        if (!v)               return 'First name is required.';
+        if (!NAME_RE.test(v)) return 'First name must contain letters only.';
+        if (v.length < 2)     return 'First name must be at least 2 characters.';
+        return '';
+      }
+    },
+    'cf-last': {
+      err: 'err-last',
+      check: function (el) {
+        var v = el.value.trim();
+        if (!v)               return 'Last name is required.';
+        if (!NAME_RE.test(v)) return 'Last name must contain letters only.';
+        if (v.length < 2)     return 'Last name must be at least 2 characters.';
+        return '';
+      }
+    },
+    'cf-email': {
+      err: 'err-email',
+      check: function (el) {
+        var v = el.value.trim();
+        if (!v)                return 'Email address is required.';
+        if (!EMAIL_RE.test(v)) return 'Enter a valid email address (e.g. name@example.com).';
+        return '';
+      }
+    },
+    'cf-phone': {
+      err: 'err-phone',
+      check: function (el) {
+        var v = el.value.trim().replace(/\s+/g, '');
+        if (!v)                 return 'Phone number is required.';
+        if (/[a-zA-Z]/.test(v)) return 'Phone number must contain digits only.';
+        if (!PHONE_RE.test(v))  return 'Enter a valid Sri Lanka number: 07XXXXXXXX or +94XXXXXXXXX.';
+        return '';
+      }
+    },
+    'cf-service': {
+      err: 'err-service',
+      check: function (el) {
+        if (!el.value) return 'Please select a service.';
+        return '';
+      }
+    },
+    'cf-message': {
+      err: 'err-message',
+      check: function (el) {
+        var v = el.value.trim();
+        if (!v)           return 'Message is required.';
+        if (v.length < 10) return 'Message must be at least 10 characters.';
+        if (countWords(v) > 200) return 'Message must not exceed 200 words.';
+        return '';
+      }
+    }
   };
 
   function validate() {
     var ok = true;
     Object.keys(rules).forEach(function (id) {
-      var input  = document.getElementById(id);
-      var errEl  = document.getElementById(rules[id].err);
-      var valid  = input && input.validity.valid;
-      if (errEl) errEl.textContent = valid ? '' : rules[id].msg;
-      if (input) input.classList.toggle('input-invalid', !valid);
-      if (!valid) ok = false;
+      var input = document.getElementById(id);
+      var errEl = document.getElementById(rules[id].err);
+      var msg   = input ? rules[id].check(input) : 'Required.';
+      if (errEl) errEl.textContent = msg;
+      if (input) input.classList.toggle('input-invalid', !!msg);
+      if (msg) ok = false;
     });
     return ok;
   }
 
-  // Show errors on blur so user gets feedback while filling in
+  // Live validation on blur
   Object.keys(rules).forEach(function (id) {
     var input = document.getElementById(id);
-    if (input) input.addEventListener('blur', function () { validate(); });
+    if (input) input.addEventListener('blur', function () {
+      var errEl = document.getElementById(rules[id].err);
+      var msg   = rules[id].check(input);
+      if (errEl) errEl.textContent = msg;
+      input.classList.toggle('input-invalid', !!msg);
+    });
   });
 
   // ── AJAX submit ───────────────────────────────────────────────
@@ -239,12 +339,10 @@ const base = import.meta.env.BASE_URL;
     success.hidden = true;
     errBan.hidden  = true;
 
-    if (!validate()) return; // stop if any field invalid
+    if (!validate()) return;
 
-    btn.disabled    = true;
-    btn.textContent = 'Sending…';
+    setBtnState('sending');
 
-    // Build JSON payload from form fields
     var fd = new FormData(form);
     var payload = {};
     fd.forEach(function (val, key) { payload[key] = val; });
@@ -257,7 +355,9 @@ const base = import.meta.env.BASE_URL;
       .then(function (r) { return r.json(); })
       .then(function (json) {
         if (json.success) {
+          setBtnState('success');
           form.reset();
+          updateWordCount();
           success.hidden = false;
           success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
@@ -267,15 +367,13 @@ const base = import.meta.env.BASE_URL;
         }
       })
       .catch(function (err) {
+        setBtnState('error');
         var detail = document.getElementById('form-error-detail');
         if (detail && err && err.message && err.message !== 'failed') {
           detail.textContent = err.message;
         }
         errBan.hidden = false;
-      })
-      .finally(function () {
-        btn.disabled    = false;
-        btn.textContent = 'Send Message';
+        errBan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
   });
 })();
@@ -356,6 +454,15 @@ const base = import.meta.env.BASE_URL;
 .dept-card p  { font-size:.85rem; color:var(--ink); opacity:.7; margin:0 0 .25rem; line-height:1.5; }
 .dept-card a  { color:var(--primary); text-decoration:none; }
 .dept-card a:hover { text-decoration:underline; }
+
+/* ── Word count ──────────────────────────────────────────────── */
+.msg-meta     { display:flex; justify-content:space-between; align-items:flex-start; gap:.5rem; min-height:1em; }
+.word-count   { font-size:.75rem; color:var(--ink); opacity:.45; white-space:nowrap; flex-shrink:0; }
+.word-count.over-limit { color:oklch(0.45 0.20 20); opacity:1; font-weight:600; }
+
+/* ── Submit button states ────────────────────────────────────── */
+#cf-submit.btn-state-success { background:oklch(0.42 0.14 145); }
+#cf-submit.btn-state-error   { background:oklch(0.45 0.18 20); }
 
 @media(max-width:768px) {
   .contact-grid { grid-template-columns:1fr; }
