@@ -5,9 +5,11 @@
   "scripts": {
     "dev":     "astro dev",
     "build":   "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "start":   "serve dist --listen tcp://0.0.0.0:$PORT"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "astro": "^4.16.0",
+    "serve": "^14.2.4"
   }
 }
