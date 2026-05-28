@@ -136,7 +136,13 @@ const base = import.meta.env.BASE_URL;
               <p>Monday – Friday: 8:30 AM – 5:00 PM<br>Saturday: 9:00 AM – 1:00 PM</p>
             </div>
           </div>
-          <div class="map-placeholder">📍 Interactive Map — Colombo 03</div>
+          <div class="map-embed">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.8140983176727!2d79.8530842!3d6.912818049999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25969e9f455ed%3A0xcf1a369fdc92547c!2sAcuity%20House%2C%2053%20Srimath%20Anagarika%20Dharmapala%20Mawatha%2C%20Colombo%2000300!5e0!3m2!1sen!2slk!4v1779962755695!5m2!1sen!2slk"
+              width="100%" height="260" style="border:0;" allowfullscreen
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              title="HNB Investment Bank location — Colombo 03"></iframe>
+          </div>
         </div>
       </div>
     </div></div>
@@ -212,7 +218,7 @@ const base = import.meta.env.BASE_URL;
   if (!form) return;
 
   // ── Button state machine ──────────────────────────────────────
-  function setBtnState(state, msg) {
+  function setBtnState(state) {
     btn.classList.remove('btn-state-sending', 'btn-state-success', 'btn-state-error');
     if (state === 'sending') {
       btn.disabled = true;
@@ -445,7 +451,7 @@ const base = import.meta.env.BASE_URL;
 .info-text h4 { font-size:.95rem; font-weight:700; color:var(--ink); margin:0 0 .25rem; }
 .info-text p, .info-text a { font-size:.9rem; color:var(--ink); opacity:.7; margin:0; text-decoration:none; line-height:1.5; }
 .info-text a:hover { color:var(--primary); opacity:1; }
-.map-placeholder { width:100%; height:220px; border-radius:var(--radius); background:oklch(0.88 0.03 242); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:600; font-size:.9rem; margin-top:1.5rem; border:2px dashed oklch(0.72 0.06 242); }
+.map-embed { width:100%; margin-top:1.5rem; border-radius:var(--radius); overflow:hidden; line-height:0; }
 
 /* ── Dept cards ──────────────────────────────────────────── */
 .dept-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2rem; }
